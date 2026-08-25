@@ -1,4 +1,5 @@
 import "./globals.css";
+import "./path.css";
 
 export const metadata = {
   title: "PyLab",
