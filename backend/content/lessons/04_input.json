@@ -1,0 +1,69 @@
+{
+  "id": "input",
+  "title": "Eingaben mit input()",
+  "subtitle": "Daten vom Benutzer einlesen und umwandeln",
+  "difficulty": "Einsteiger",
+  "estimated_minutes": 20,
+  "steps": [
+    {
+      "id": "intro",
+      "type": "lesson",
+      "eyebrow": "Interaktiv",
+      "title": "Programme reagieren auf Benutzer",
+      "body": [
+        "Mit input() kann dein Programm auf eine Eingabe des Benutzers warten.",
+        "input() liefert immer Text zurück, also einen Wert vom Datentyp str."
+      ],
+      "code": "name = input(\"Wie heißt du? \”)\nprint(name)"
+    },
+    {
+      "id": "conversion",
+      "type": "lesson",
+      "eyebrow": "Wichtig",
+      "title": "Text in Zahlen umwandeln",
+      "body": [
+        "Wenn du mit einer Eingabe rechnen möchtest, musst du sie oft umwandeln.",
+        "int() wandelt einen passenden Wert in eine ganze Zahl um, float() in eine Kommazahl."
+      ],
+      "code": "alter = int(input(\"Wie alt bist du? \"))"
+    },
+    {
+      "id": "quiz",
+      "type": "quiz",
+      "eyebrow": "Kurz prüfen",
+      "title": "Welchen Typ liefert input()?",
+      "question": "Was ist der Rückgabewert von input() standardmäßig?",
+      "options": ["int", "str", "bool"],
+      "correct": 1,
+      "explanation": "Richtig. input() liefert immer einen String, solange du den Wert nicht selbst umwandelst."
+    },
+    {
+      "id": "code",
+      "type": "code",
+      "eyebrow": "Jetzt du",
+      "title": "Eine Zahl umwandeln",
+      "task": "Die Variable eingabe enthält den Text \"21\". Wandle ihn mit int() in eine ganze Zahl um und gib das Ergebnis plus 1 aus.",
+      "starter_code": "eingabe = \"21\"\n\n# Wandle eingabe um und gib den Wert plus 1 aus\n",
+      "expected_output": "22",
+      "xp": 70,
+      "hints": [
+        "Text kannst du mit int(...) in eine ganze Zahl umwandeln.",
+        "Speichere int(eingabe) in einer neuen Variable oder verwende es direkt.",
+        "Am Ende soll print(int(eingabe) + 1) ausgeführt werden."
+      ]
+    },
+    {
+      "id": "summary",
+      "type": "summary",
+      "eyebrow": "Zusammenfassung",
+      "title": "Das solltest du jetzt können",
+      "items": [
+        "input() liest eine Benutzereingabe ein.",
+        "input() liefert standardmäßig str.",
+        "int() und float() wandeln Werte in Zahlentypen um.",
+        "Typumwandlung ist nötig, wenn du mit eingegebenen Zahlen rechnen willst."
+      ],
+      "next": "Als Nächstes: Entscheidungen mit if, elif und else."
+    }
+  ]
+}
