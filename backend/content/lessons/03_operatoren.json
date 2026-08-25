@@ -1,20 +1,52 @@
 {
   "id": "operatoren",
   "title": "Operatoren und Berechnungen",
-  "subtitle": "Rechnen, vergleichen und Werte verändern",
+  "subtitle": "Rechnen, vergleichen und Werte gezielt verändern",
   "difficulty": "Einsteiger",
-  "estimated_minutes": 20,
+  "estimated_minutes": 45,
   "steps": [
     {
       "id": "intro",
       "type": "lesson",
-      "eyebrow": "Grundlage",
+      "eyebrow": "Grundverständnis",
       "title": "Was ist ein Operator?",
       "body": [
-        "Ein Operator ist ein Zeichen oder Schlüsselwort, das eine bestimmte Operation ausführt.",
-        "Mit + addierst du, mit - subtrahierst du, mit * multiplizierst du und mit / dividierst du."
+        "Ein Operator ist ein Zeichen oder Schlüsselwort, das auf Werte angewendet wird und eine bestimmte Operation ausführt.",
+        "Du kennst einige Operatoren bereits aus der Mathematik, zum Beispiel +, - oder *. In Python kommen zusätzlich Vergleichsoperatoren und Zuweisungsoperatoren hinzu.",
+        "Ein Ausdruck wie 10 + 5 besteht aus zwei Werten und einem Operator. Python wertet diesen Ausdruck aus und erhält das Ergebnis 15.",
+        "Operatoren sind ein zentrales Werkzeug, weil Programme ständig Werte berechnen, vergleichen oder verändern."
       ],
-      "code": "a = 10\nb = 3\nprint(a + b)"
+      "term": {
+        "symbol": "+ - * /",
+        "name": "arithmetische Operatoren",
+        "meaning": "Operatoren für grundlegende mathematische Berechnungen."
+      }
+    },
+    {
+      "id": "arithmetic",
+      "type": "lesson",
+      "eyebrow": "Rechnen",
+      "title": "Die wichtigsten Rechenoperatoren",
+      "body": [
+        "+ addiert zwei Werte, - subtrahiert, * multipliziert und / dividiert.",
+        "Die Division mit / liefert in Python grundsätzlich einen float zurück. 10 / 2 ergibt also 5.0.",
+        "Mit // führst du eine Ganzzahldivision durch. Dabei wird der Nachkommaanteil abgeschnitten.",
+        "Mit ** berechnest du Potenzen. 2 ** 3 bedeutet 2 hoch 3 und ergibt 8."
+      ],
+      "code": "print(10 + 3)\nprint(10 - 3)\nprint(10 * 3)\nprint(10 / 2)\nprint(10 // 3)\nprint(2 ** 3)"
+    },
+    {
+      "id": "precedence",
+      "type": "lesson",
+      "eyebrow": "Reihenfolge",
+      "title": "Python beachtet Rechenregeln",
+      "body": [
+        "Python wertet Ausdrücke nicht einfach nur von links nach rechts aus. Wie in der Mathematik gilt Punktrechnung vor Strichrechnung.",
+        "2 + 3 * 4 ergibt deshalb 14 und nicht 20.",
+        "Mit runden Klammern kannst du die Reihenfolge ausdrücklich beeinflussen. (2 + 3) * 4 ergibt 20.",
+        "Klammern sind oft nicht nur technisch nötig, sondern machen komplizierte Ausdrücke auch leichter lesbar."
+      ],
+      "code": "print(2 + 3 * 4)\nprint((2 + 3) * 4)"
     },
     {
       "id": "modulo",
@@ -23,62 +55,113 @@
       "title": "% – der Modulo-Operator",
       "body": [
         "Der Modulo-Operator % liefert den Rest einer Division.",
-        "10 % 3 ergibt 1, weil 10 durch 3 geteilt einen Rest von 1 hat."
+        "10 % 3 ergibt 1, weil 10 durch 3 geteilt einen Rest von 1 hat.",
+        "Modulo ist besonders nützlich, um zu prüfen, ob eine Zahl ohne Rest durch eine andere teilbar ist.",
+        "Wenn zahl % 2 den Wert 0 ergibt, ist die Zahl gerade. Ergibt der Rest 1, ist eine positive ganze Zahl ungerade."
       ],
+      "code": "print(10 % 3)\nprint(8 % 2)\nprint(7 % 2)",
       "term": {
         "symbol": "%",
         "name": "Modulo-Operator",
-        "meaning": "Gibt den Rest einer Division zurück. Besonders nützlich, um gerade und ungerade Zahlen zu erkennen."
+        "meaning": "Gibt den Rest einer Division zurück."
       }
     },
     {
-      "id": "quiz",
+      "id": "modulo-quiz",
       "type": "quiz",
-      "eyebrow": "Kurz prüfen",
-      "title": "Was ergibt 8 % 2?",
-      "question": "Wähle das richtige Ergebnis.",
-      "options": ["0", "2", "4"],
+      "eyebrow": "Verständnis prüfen",
+      "title": "Was ergibt 17 % 5?",
+      "question": "Welcher Rest bleibt bei 17 geteilt durch 5?",
+      "options": ["2", "3", "5"],
       "correct": 0,
-      "explanation": "Richtig. 8 ist ohne Rest durch 2 teilbar, daher ergibt 8 % 2 den Wert 0."
+      "explanation": "Richtig. 5 passt dreimal in 17 und es bleiben 2 übrig. Daher ergibt 17 % 5 den Wert 2."
+    },
+    {
+      "id": "comparison",
+      "type": "lesson",
+      "eyebrow": "Vergleichen",
+      "title": "Vergleichsoperatoren liefern True oder False",
+      "body": [
+        "Vergleichsoperatoren prüfen Beziehungen zwischen Werten. Das Ergebnis eines Vergleichs ist immer ein bool: True oder False.",
+        "== prüft Gleichheit, != Ungleichheit, > größer als, < kleiner als, >= größer oder gleich und <= kleiner oder gleich.",
+        "Wichtig ist der Unterschied zwischen = und ==. = weist einen Wert zu. == vergleicht zwei Werte.",
+        "Vergleichsoperatoren bilden später die Grundlage für if-Bedingungen und Schleifen."
+      ],
+      "code": "alter = 20\nprint(alter == 20)\nprint(alter != 18)\nprint(alter >= 18)",
+      "term": {
+        "symbol": "==",
+        "name": "Gleichheitsoperator",
+        "meaning": "Vergleicht zwei Werte und liefert True, wenn sie gleich sind."
+      }
     },
     {
       "id": "assignment",
       "type": "lesson",
-      "eyebrow": "Kurzschreibweise",
-      "title": "+= und weitere Zuweisungsoperatoren",
+      "eyebrow": "Werte verändern",
+      "title": "+=, -=, *= und /= als Kurzschreibweise",
       "body": [
-        "Mit += kannst du einen bestehenden Wert erhöhen. zahl += 1 bedeutet dasselbe wie zahl = zahl + 1.",
-        "Entsprechend gibt es auch -=, *= und /=."
+        "Oft möchtest du den aktuellen Wert einer Variable verändern und wieder in derselben Variable speichern.",
+        "punkte = punkte + 5 kann kürzer als punkte += 5 geschrieben werden.",
+        "Entsprechend gibt es -= für Subtraktion, *= für Multiplikation und /= für Division.",
+        "Diese Operatoren werden besonders häufig bei Zählern, Punkteständen und Schleifen verwendet."
       ],
-      "code": "punkte = 10\npunkte += 5\nprint(punkte)"
+      "code": "punkte = 10\npunkte += 5\nprint(punkte)\n\npunkte -= 3\nprint(punkte)"
+    },
+    {
+      "id": "assignment-quiz",
+      "type": "quiz",
+      "eyebrow": "Verständnis prüfen",
+      "title": "Was bedeutet zahl += 2?",
+      "question": "Welche längere Schreibweise ist gleichbedeutend?",
+      "options": ["zahl = 2", "zahl = zahl + 2", "zahl == zahl + 2"],
+      "correct": 1,
+      "explanation": "Richtig. += nimmt den bisherigen Wert, addiert den rechten Wert und speichert das Ergebnis wieder in derselben Variable."
+    },
+    {
+      "id": "string-plus",
+      "type": "lesson",
+      "eyebrow": "Datentypen beachten",
+      "title": "+ bedeutet nicht immer mathematische Addition",
+      "body": [
+        "Operatoren hängen auch vom Datentyp ab. Bei Zahlen addiert + mathematisch.",
+        "Bei Strings verbindet + dagegen Texte miteinander. Dieser Vorgang heißt Konkatenation oder Verkettung.",
+        "\"Py\" + \"thon\" ergibt deshalb \"Python\".",
+        "Ein int und ein str können nicht ohne Umwandlung mit + verbunden werden. Genau solche Typfehler wirst du später häufig erkennen lernen."
+      ],
+      "code": "print(2 + 3)\nprint(\"Py\" + \"thon\")"
     },
     {
       "id": "code",
       "type": "code",
       "eyebrow": "Jetzt du",
-      "title": "Mit Modulo rechnen",
-      "task": "Die Variable zahl hat den Wert 17. Gib mit print() den Rest aus, der bei der Division durch 5 entsteht.",
-      "starter_code": "zahl = 17\n\n# Berechne den Rest bei Division durch 5\n",
-      "expected_output": "2",
-      "xp": 70,
+      "title": "Mehrere Operatoren anwenden",
+      "task": "Die Variable zahl hat den Wert 17. Gib zuerst den Rest bei Division durch 5 aus und danach in einer zweiten Zeile das Ergebnis von zahl * 2.",
+      "starter_code": "zahl = 17\n\n# 1. Rest bei Division durch 5 ausgeben\n# 2. zahl mal 2 ausgeben\n",
+      "expected_output": "2\n34",
+      "xp": 90,
       "hints": [
-        "Du brauchst den Modulo-Operator %.",
-        "Berechne zahl % 5.",
-        "Setze den Ausdruck direkt in print(...)."
+        "Für den Rest brauchst du den Modulo-Operator %.",
+        "Die erste Ausgabe kann print(zahl % 5) sein.",
+        "Für die zweite Ausgabe verwendest du den Multiplikationsoperator *."
       ]
     },
     {
       "id": "summary",
       "type": "summary",
       "eyebrow": "Zusammenfassung",
-      "title": "Das solltest du jetzt können",
+      "title": "Das solltest du jetzt wirklich verstanden haben",
       "items": [
-        "+, -, *, / sind Rechenoperatoren.",
-        "% ist der Modulo-Operator und liefert einen Rest.",
-        "+= erhöht einen vorhandenen Wert.",
-        "Operatoren können direkt in Ausdrücken und print() verwendet werden."
+        "Operatoren führen Berechnungen, Vergleiche oder Zuweisungen aus.",
+        "+, -, *, / sind grundlegende Rechenoperatoren.",
+        "// führt eine Ganzzahldivision aus und ** berechnet Potenzen.",
+        "% heißt Modulo-Operator und liefert den Rest einer Division.",
+        "Python beachtet Rechenprioritäten; Klammern können die Reihenfolge verändern.",
+        "Vergleichsoperatoren wie ==, != und >= liefern True oder False.",
+        "= weist zu, während == vergleicht.",
+        "+=, -=, *= und /= verändern vorhandene Variablen in Kurzschreibweise.",
+        "Die Bedeutung eines Operators kann vom Datentyp abhängen."
       ],
-      "next": "Als Nächstes: Benutzereingaben mit input()."
+      "next": "Als Nächstes lernst du, mit input() Daten vom Benutzer einzulesen und korrekt umzuwandeln."
     }
   ]
 }
