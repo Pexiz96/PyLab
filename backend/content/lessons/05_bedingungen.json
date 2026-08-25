@@ -1,20 +1,38 @@
 {
   "id": "bedingungen",
   "title": "Entscheidungen mit if, elif und else",
-  "subtitle": "Programme abhängig von Bedingungen reagieren lassen",
+  "subtitle": "Bedingungen verstehen, vergleichen und Programme gezielt verzweigen",
   "difficulty": "Einsteiger",
-  "estimated_minutes": 24,
+  "estimated_minutes": 50,
   "steps": [
+    {
+      "id": "intro",
+      "type": "lesson",
+      "eyebrow": "Kontrollfluss",
+      "title": "Programme müssen Entscheidungen treffen können",
+      "body": [
+        "Bis jetzt wurden deine Anweisungen einfach nacheinander ausgeführt. Viele Programme müssen aber abhängig von einer Situation unterschiedlich reagieren.",
+        "Genau dafür gibt es Bedingungen. Eine Bedingung wird ausgewertet und ergibt entweder True oder False.",
+        "Mit if kannst du sagen: Führe diesen Code nur aus, wenn eine bestimmte Bedingung wahr ist.",
+        "Solche Entscheidungen findest du überall: Login erlaubt oder nicht, Rabatt gewähren oder nicht, Spiel gewonnen oder nicht."
+      ],
+      "callout": {
+        "title": "Kontrollfluss",
+        "text": "Kontrollfluss beschreibt, in welcher Reihenfolge und unter welchen Bedingungen Code ausgeführt wird."
+      }
+    },
     {
       "id": "if",
       "type": "lesson",
-      "eyebrow": "Kontrollfluss",
+      "eyebrow": "Grundlage",
       "title": "if prüft eine Bedingung",
       "body": [
-        "Mit if lässt du Python entscheiden, ob ein eingerückter Codeblock ausgeführt wird.",
-        "Die Bedingung muss True oder False ergeben. Nach der Bedingung steht ein Doppelpunkt."
+        "Nach if folgt eine Bedingung. Am Ende der if-Zeile steht ein Doppelpunkt.",
+        "Der Code, der nur bei einer wahren Bedingung ausgeführt werden soll, wird eingerückt.",
+        "Die Einrückung ist in Python nicht nur für die Optik da. Sie gehört zur Syntax und zeigt, welche Anweisungen zum if-Block gehören.",
+        "Ist die Bedingung False, überspringt Python den eingerückten Block und macht danach weiter."
       ],
-      "code": "alter = 20\nif alter >= 18:\n    print(\"Volljährig\")",
+      "code": "alter = 20\n\nif alter >= 18:\n    print(\"Volljährig\")\n\nprint(\"Programmende\")",
       "term": {
         "symbol": ":",
         "name": "Doppelpunkt",
@@ -25,62 +43,142 @@
       "id": "comparison",
       "type": "lesson",
       "eyebrow": "Vergleichen",
-      "title": "Vergleichsoperatoren",
+      "title": "Vergleichsoperatoren erzeugen Wahrheitswerte",
       "body": [
-        "== bedeutet ist gleich. != bedeutet ist ungleich. > und < vergleichen Größen, >= und <= schließen Gleichheit ein.",
-        "Wichtig: = weist einen Wert zu, == vergleicht zwei Werte."
+        "== prüft, ob zwei Werte gleich sind. != prüft, ob sie verschieden sind.",
+        "> bedeutet größer als, < kleiner als, >= größer oder gleich und <= kleiner oder gleich.",
+        "Jeder dieser Vergleiche ergibt einen Boolean, also True oder False.",
+        "Wichtig: = ist der Zuweisungsoperator. == ist der Vergleichsoperator für Gleichheit. Diese beiden Zeichen haben vollkommen unterschiedliche Aufgaben."
       ],
-      "code": "zahl = 10\nprint(zahl == 10)"
+      "code": "zahl = 10\nprint(zahl == 10)\nprint(zahl != 5)\nprint(zahl > 3)\nprint(zahl <= 10)",
+      "term": {
+        "symbol": "==",
+        "name": "Gleichheitsoperator",
+        "meaning": "Vergleicht zwei Werte und liefert True, wenn beide gleich sind."
+      }
     },
     {
-      "id": "quiz",
+      "id": "comparison-quiz",
       "type": "quiz",
-      "eyebrow": "Kurz prüfen",
+      "eyebrow": "Verständnis prüfen",
       "title": "Welcher Operator vergleicht Gleichheit?",
-      "question": "Wähle den richtigen Vergleichsoperator.",
+      "question": "Welcher Operator prüft, ob zwei Werte gleich sind?",
       "options": ["=", "==", ">="],
       "correct": 1,
-      "explanation": "Richtig. == ist der Vergleichsoperator für Gleichheit. = ist dagegen der Zuweisungsoperator."
+      "explanation": "Richtig. == vergleicht Gleichheit. = weist dagegen einen Wert zu."
     },
     {
-      "id": "elif-else",
+      "id": "else",
+      "type": "lesson",
+      "eyebrow": "Zwei Möglichkeiten",
+      "title": "else behandelt den anderen Fall",
+      "body": [
+        "Mit else kannst du festlegen, was passieren soll, wenn die if-Bedingung False ist.",
+        "else bekommt keine eigene Bedingung. Es bedeutet einfach: Wenn der vorherige if-Fall nicht eingetreten ist, führe diesen Block aus.",
+        "Damit kannst du zwei sich ausschließende Wege formulieren."
+      ],
+      "code": "alter = 16\n\nif alter >= 18:\n    print(\"Zutritt erlaubt\")\nelse:\n    print(\"Zutritt nicht erlaubt\")"
+    },
+    {
+      "id": "elif",
       "type": "lesson",
       "eyebrow": "Mehrere Fälle",
-      "title": "elif und else",
+      "title": "elif prüft weitere Bedingungen",
       "body": [
-        "elif steht für einen weiteren Bedingungsfall, wenn vorherige Bedingungen nicht erfüllt waren.",
-        "else fängt den übrigen Fall ab und benötigt keine eigene Bedingung."
+        "Wenn mehr als zwei Fälle möglich sind, kannst du zwischen if und else einen oder mehrere elif-Zweige verwenden.",
+        "elif steht sinngemäß für else if. Der Zweig wird nur geprüft, wenn vorherige Bedingungen nicht erfüllt waren.",
+        "Python führt bei einer solchen Kette den ersten passenden Zweig aus und überspringt die weiteren Zweige.",
+        "Die Reihenfolge der Bedingungen ist deshalb wichtig. Spezifischere oder höhere Grenzwerte stehen oft zuerst."
       ],
-      "code": "punkte = 75\nif punkte >= 90:\n    print(\"Sehr gut\")\nelif punkte >= 50:\n    print(\"Bestanden\")\nelse:\n    print(\"Nicht bestanden\")"
+      "code": "punkte = 75\n\nif punkte >= 90:\n    print(\"Sehr gut\")\nelif punkte >= 50:\n    print(\"Bestanden\")\nelse:\n    print(\"Nicht bestanden\")"
+    },
+    {
+      "id": "order",
+      "type": "lesson",
+      "eyebrow": "Logik verstehen",
+      "title": "Die Reihenfolge von Bedingungen kann das Ergebnis verändern",
+      "body": [
+        "Bei einer if-elif-else-Kette wird von oben nach unten geprüft.",
+        "Sobald eine Bedingung True ist, wird ihr Block ausgeführt und die restlichen Zweige werden übersprungen.",
+        "Wenn du zuerst punkte >= 50 prüfst und danach punkte >= 90, würde ein Wert von 95 schon beim ersten Zweig hängen bleiben.",
+        "Deshalb solltest du Bedingungen bewusst ordnen und testen."
+      ],
+      "code": "punkte = 95\n\nif punkte >= 90:\n    print(\"Sehr gut\")\nelif punkte >= 50:\n    print(\"Bestanden\")"
+    },
+    {
+      "id": "logical",
+      "type": "lesson",
+      "eyebrow": "Mehrere Bedingungen verbinden",
+      "title": "and, or und not verbinden Wahrheitswerte",
+      "body": [
+        "Mit and müssen beide Teilbedingungen True sein, damit der Gesamtausdruck True wird.",
+        "Mit or reicht es, wenn mindestens eine Teilbedingung True ist.",
+        "not kehrt einen Wahrheitswert um: aus True wird False und aus False wird True.",
+        "Diese logischen Operatoren helfen dir, komplexere Regeln verständlich auszudrücken."
+      ],
+      "code": "alter = 25\nhat_ticket = True\n\nif alter >= 18 and hat_ticket:\n    print(\"Einlass\")",
+      "term": {
+        "symbol": "and / or / not",
+        "name": "logische Operatoren",
+        "meaning": "Verbinden oder verändern boolesche Bedingungen."
+      }
+    },
+    {
+      "id": "logical-quiz",
+      "type": "quiz",
+      "eyebrow": "Verständnis prüfen",
+      "title": "Wann ist and wahr?",
+      "question": "Wann ergibt A and B den Wert True?",
+      "options": ["Wenn mindestens eine Bedingung True ist", "Nur wenn beide Bedingungen True sind", "Immer wenn A False ist"],
+      "correct": 1,
+      "explanation": "Richtig. and ist nur dann True, wenn beide verbundenen Bedingungen True sind."
+    },
+    {
+      "id": "nested",
+      "type": "lesson",
+      "eyebrow": "Vertiefung",
+      "title": "Bedingungen können verschachtelt werden",
+      "body": [
+        "Ein if-Block kann wiederum ein weiteres if enthalten. Das nennt man Verschachtelung.",
+        "Verschachtelte Bedingungen sind manchmal sinnvoll, können aber schnell unübersichtlich werden.",
+        "Wenn möglich, solltest du einfache logische Operatoren oder klar strukturierte Bedingungen bevorzugen.",
+        "Achte bei Verschachtelungen besonders auf die Einrückung, denn sie zeigt die Zugehörigkeit der Codeblöcke."
+      ],
+      "code": "alter = 20\nhat_ticket = True\n\nif alter >= 18:\n    if hat_ticket:\n        print(\"Einlass\")"
     },
     {
       "id": "code",
       "type": "code",
       "eyebrow": "Jetzt du",
       "title": "Volljährigkeit prüfen",
-      "task": "Die Variable alter ist 20. Schreibe eine if-Bedingung, die bei mindestens 18 Jahren genau Volljährig ausgibt.",
-      "starter_code": "alter = 20\n\n# Schreibe hier deine if-Bedingung\n",
+      "task": "Die Variable alter ist 20. Schreibe eine if-Bedingung, die bei einem Alter von mindestens 18 exakt Volljährig ausgibt.",
+      "starter_code": "alter = 20\n\n# Schreibe hier deine Bedingung\n",
       "expected_output": "Volljährig",
-      "xp": 80,
+      "xp": 100,
       "hints": [
-        "Vergleiche alter mit 18.",
-        "Für mindestens verwendest du >=.",
-        "Die Bedingung beginnt mit if alter >= 18: und der print()-Aufruf muss eingerückt sein."
+        "Du brauchst einen Vergleich zwischen alter und 18.",
+        "Mindestens bedeutet >=.",
+        "Die if-Zeile endet mit einem Doppelpunkt und der print()-Aufruf muss eingerückt sein."
       ]
     },
     {
       "id": "summary",
       "type": "summary",
       "eyebrow": "Zusammenfassung",
-      "title": "Das solltest du jetzt können",
+      "title": "Das solltest du jetzt wirklich verstanden haben",
       "items": [
-        "if führt Code nur bei einer wahren Bedingung aus.",
-        "== vergleicht, = weist zu.",
-        "elif prüft weitere Fälle.",
-        "else behandelt den verbleibenden Fall.",
-        "Codeblöcke werden in Python eingerückt."
+        "Bedingungen steuern, welcher Code ausgeführt wird.",
+        "Ein Vergleich ergibt True oder False.",
+        "if führt einen eingerückten Block nur bei einer wahren Bedingung aus.",
+        "else behandelt den übrigen Fall ohne eigene Bedingung.",
+        "elif prüft zusätzliche Bedingungen, wenn vorherige Zweige nicht gepasst haben.",
+        "Die Reihenfolge von if- und elif-Bedingungen ist wichtig.",
+        "== vergleicht, während = einen Wert zuweist.",
+        "and verlangt zwei wahre Bedingungen, or mindestens eine, not kehrt einen Wahrheitswert um.",
+        "Einrückungen gehören in Python zur Syntax und bestimmen Codeblöcke.",
+        "Verschachtelte Bedingungen sind möglich, sollten aber übersichtlich bleiben."
       ],
-      "next": "Als Nächstes: Wiederholungen mit for- und while-Schleifen."
+      "next": "Als Nächstes lernst du, mit for- und while-Schleifen Abläufe kontrolliert zu wiederholen."
     }
   ]
 }
