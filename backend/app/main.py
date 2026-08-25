@@ -7,16 +7,21 @@ from .database import init_db, get_total_xp, add_xp, save_progress, get_progress
 from .content import load_lessons, get_lesson
 from .runner import run_python
 
-app = FastAPI(title="PyLab API", version="0.2.1")
+app = FastAPI(title="PyLab API", version="0.2.2")
 
-allowed_origins = [
-    origin.strip()
-    for origin in os.getenv(
-        "PYLAB_ALLOWED_ORIGINS",
-        "http://localhost:3000,http://127.0.0.1:3000",
-    ).split(",")
+DEFAULT_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://impartial-smile-production-3ee9.up.railway.app",
+]
+
+configured_origins = [
+    origin.strip().rstrip("/")
+    for origin in os.getenv("PYLAB_ALLOWED_ORIGINS", "").split(",")
     if origin.strip()
 ]
+
+allowed_origins = sorted(set(DEFAULT_ORIGINS + configured_origins))
 
 app.add_middleware(
     CORSMiddleware,
@@ -45,6 +50,15 @@ class ProgressRequest(BaseModel):
     lesson_id: str
     step_index: int
     completed: bool = False
+
+@app.get("/")
+def root():
+    return {
+        "app": "PyLab API",
+        "status": "ok",
+        "health": "/health",
+        "docs": "/docs",
+    }
 
 @app.get("/health")
 def health():
