@@ -14,7 +14,7 @@
         "Mit input() kann dein Programm auf eine Eingabe des Benutzers warten.",
         "input() liefert immer Text zurück, also einen Wert vom Datentyp str."
       ],
-      "code": "name = input(\"Wie heißt du? \”)\nprint(name)"
+      "code": "name = input(\"Wie heißt du? \ \")\nprint(name)"
     },
     {
       "id": "conversion",
