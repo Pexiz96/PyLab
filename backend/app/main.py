@@ -7,7 +7,7 @@ from .database import init_db, get_total_xp, add_xp, save_progress, get_progress
 from .content import load_lessons, get_lesson
 from .runner import run_python
 
-app = FastAPI(title="PyLab API", version="0.2.2")
+app = FastAPI(title="PyLab API", version="0.2.3")
 
 DEFAULT_ORIGINS = [
     "http://localhost:3000",
@@ -26,6 +26,7 @@ allowed_origins = sorted(set(DEFAULT_ORIGINS + configured_origins))
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.up\.railway\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -56,13 +57,14 @@ def root():
     return {
         "app": "PyLab API",
         "status": "ok",
+        "version": "0.2.3",
         "health": "/health",
         "docs": "/docs",
     }
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "app": "PyLab"}
+    return {"status": "ok", "app": "PyLab", "version": "0.2.3"}
 
 @app.get("/lessons")
 def lessons():
