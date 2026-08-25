@@ -1,0 +1,94 @@
+{
+  "id": "python-start",
+  "title": "Dein Start mit Python",
+  "subtitle": "Ausgabe, Variablen und dein erster eigener Code",
+  "difficulty": "Einsteiger",
+  "estimated_minutes": 15,
+  "steps": [
+    {
+      "id": "welcome",
+      "type": "lesson",
+      "eyebrow": "Willkommen",
+      "title": "Was ist Python?",
+      "body": [
+        "Python ist eine Programmiersprache. Mit ihr kannst du einem Computer Schritt für Schritt sagen, was er tun soll.",
+        "In PyLab lernst du nicht nur Befehle auswendig. Du sollst verstehen, warum der Code funktioniert."
+      ],
+      "callout": {
+        "title": "Dein Ziel",
+        "text": "Nach dieser Lektion kannst du Text ausgeben, eine Variable anlegen und deinen ersten kleinen Python-Code selbst schreiben."
+      }
+    },
+    {
+      "id": "print",
+      "type": "lesson",
+      "eyebrow": "Grundlage 1",
+      "title": "Text mit print() ausgeben",
+      "body": [
+        "Mit print() gibst du etwas in der Konsole aus.",
+        "print ist der Name einer eingebauten Python-Funktion. Die runden Klammern gehören zum Funktionsaufruf."
+      ],
+      "code": "print(\"Hallo PyLab\")",
+      "term": {
+        "symbol": "print()",
+        "name": "Funktion",
+        "meaning": "Eine Funktion führt eine bestimmte Aufgabe aus. print() gibt Werte aus."
+      }
+    },
+    {
+      "id": "print-quiz",
+      "type": "quiz",
+      "eyebrow": "Kurz prüfen",
+      "title": "Welche Zeile gibt Text aus?",
+      "question": "Wähle die richtige Python-Zeile.",
+      "options": ["say(\"Hallo\")", "print(\"Hallo\")", "text = print"],
+      "correct": 1,
+      "explanation": "Richtig. print() ist die eingebaute Python-Funktion für Ausgaben."
+    },
+    {
+      "id": "variable",
+      "type": "lesson",
+      "eyebrow": "Grundlage 2",
+      "title": "Werte in Variablen speichern",
+      "body": [
+        "Eine Variable ist ein Name, unter dem du einen Wert speicherst.",
+        "Im Beispiel bekommt die Variable name den Text PyLab."
+      ],
+      "code": "name = \"PyLab\"",
+      "term": {
+        "symbol": "=",
+        "name": "Zuweisungsoperator",
+        "meaning": "Der Wert auf der rechten Seite wird dem Namen auf der linken Seite zugewiesen."
+      }
+    },
+    {
+      "id": "code-task",
+      "type": "code",
+      "eyebrow": "Jetzt du",
+      "title": "Gib eine Variable aus",
+      "task": "Die Variable name ist bereits angelegt. Gib ihren Inhalt mit print() aus.",
+      "starter_code": "name = \"PyLab\"\n\n# Schreibe deine Lösung unter diese Zeile\n",
+      "expected_output": "PyLab",
+      "xp": 50,
+      "hints": [
+        "Du musst die Variable nicht neu erstellen.",
+        "print() kann direkt einen Variablennamen erhalten.",
+        "Die Lösung besteht aus einer einzigen print(...)-Zeile."
+      ]
+    },
+    {
+      "id": "summary",
+      "type": "summary",
+      "eyebrow": "Geschafft",
+      "title": "Das hast du gelernt",
+      "items": [
+        "Python führt Anweisungen Schritt für Schritt aus.",
+        "print() gibt Werte in der Konsole aus.",
+        "= ist der Zuweisungsoperator.",
+        "Variablen speichern Werte unter einem Namen.",
+        "Du kannst eine Variable selbst ausgeben."
+      ],
+      "next": "Als Nächstes: Datentypen – str, int, float und bool."
+    }
+  ]
+}
