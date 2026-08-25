@@ -1,0 +1,84 @@
+{
+  "id": "operatoren",
+  "title": "Operatoren und Berechnungen",
+  "subtitle": "Rechnen, vergleichen und Werte verändern",
+  "difficulty": "Einsteiger",
+  "estimated_minutes": 20,
+  "steps": [
+    {
+      "id": "intro",
+      "type": "lesson",
+      "eyebrow": "Grundlage",
+      "title": "Was ist ein Operator?",
+      "body": [
+        "Ein Operator ist ein Zeichen oder Schlüsselwort, das eine bestimmte Operation ausführt.",
+        "Mit + addierst du, mit - subtrahierst du, mit * multiplizierst du und mit / dividierst du."
+      ],
+      "code": "a = 10\nb = 3\nprint(a + b)"
+    },
+    {
+      "id": "modulo",
+      "type": "lesson",
+      "eyebrow": "Wichtiger Operator",
+      "title": "% – der Modulo-Operator",
+      "body": [
+        "Der Modulo-Operator % liefert den Rest einer Division.",
+        "10 % 3 ergibt 1, weil 10 durch 3 geteilt einen Rest von 1 hat."
+      ],
+      "term": {
+        "symbol": "%",
+        "name": "Modulo-Operator",
+        "meaning": "Gibt den Rest einer Division zurück. Besonders nützlich, um gerade und ungerade Zahlen zu erkennen."
+      }
+    },
+    {
+      "id": "quiz",
+      "type": "quiz",
+      "eyebrow": "Kurz prüfen",
+      "title": "Was ergibt 8 % 2?",
+      "question": "Wähle das richtige Ergebnis.",
+      "options": ["0", "2", "4"],
+      "correct": 0,
+      "explanation": "Richtig. 8 ist ohne Rest durch 2 teilbar, daher ergibt 8 % 2 den Wert 0."
+    },
+    {
+      "id": "assignment",
+      "type": "lesson",
+      "eyebrow": "Kurzschreibweise",
+      "title": "+= und weitere Zuweisungsoperatoren",
+      "body": [
+        "Mit += kannst du einen bestehenden Wert erhöhen. zahl += 1 bedeutet dasselbe wie zahl = zahl + 1.",
+        "Entsprechend gibt es auch -=, *= und /=."
+      ],
+      "code": "punkte = 10\npunkte += 5\nprint(punkte)"
+    },
+    {
+      "id": "code",
+      "type": "code",
+      "eyebrow": "Jetzt du",
+      "title": "Mit Modulo rechnen",
+      "task": "Die Variable zahl hat den Wert 17. Gib mit print() den Rest aus, der bei der Division durch 5 entsteht.",
+      "starter_code": "zahl = 17\n\n# Berechne den Rest bei Division durch 5\n",
+      "expected_output": "2",
+      "xp": 70,
+      "hints": [
+        "Du brauchst den Modulo-Operator %.",
+        "Berechne zahl % 5.",
+        "Setze den Ausdruck direkt in print(...)."
+      ]
+    },
+    {
+      "id": "summary",
+      "type": "summary",
+      "eyebrow": "Zusammenfassung",
+      "title": "Das solltest du jetzt können",
+      "items": [
+        "+, -, *, / sind Rechenoperatoren.",
+        "% ist der Modulo-Operator und liefert einen Rest.",
+        "+= erhöht einen vorhandenen Wert.",
+        "Operatoren können direkt in Ausdrücken und print() verwendet werden."
+      ],
+      "next": "Als Nächstes: Benutzereingaben mit input()."
+    }
+  ]
+}
