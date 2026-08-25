@@ -1,69 +1,169 @@
 {
   "id": "input",
   "title": "Eingaben mit input()",
-  "subtitle": "Daten vom Benutzer einlesen und umwandeln",
+  "subtitle": "Benutzereingaben verstehen, speichern, prüfen und in Zahlen umwandeln",
   "difficulty": "Einsteiger",
-  "estimated_minutes": 20,
+  "estimated_minutes": 45,
   "steps": [
     {
       "id": "intro",
       "type": "lesson",
-      "eyebrow": "Interaktiv",
-      "title": "Programme reagieren auf Benutzer",
+      "eyebrow": "Interaktive Programme",
+      "title": "Mit input() wartet dein Programm auf eine Eingabe",
       "body": [
-        "Mit input() kann dein Programm auf eine Eingabe des Benutzers warten.",
-        "input() liefert immer Text zurück, also einen Wert vom Datentyp str."
+        "Bisher kamen alle Werte direkt aus deinem Code. Mit input() kann dein Programm Daten vom Benutzer entgegennehmen.",
+        "Wenn Python input() erreicht, pausiert das Programm an dieser Stelle und wartet, bis der Benutzer etwas eingibt und bestätigt.",
+        "Der Rückgabewert von input() kann anschließend in einer Variable gespeichert und später weiterverarbeitet werden.",
+        "Damit werden Programme interaktiv: Sie reagieren auf Informationen, die erst während der Ausführung eingegeben werden."
       ],
-      "code": "name = input(\"Wie heißt du? \")\nprint(name)"
+      "code": "name = input(\"Wie heißt du? \ ")\nprint(name)",
+      "term": {
+        "symbol": "input()",
+        "name": "eingebaute Funktion",
+        "meaning": "input() wartet auf eine Benutzereingabe und gibt diese als String zurück."
+      }
     },
     {
-      "id": "conversion",
+      "id": "prompt",
       "type": "lesson",
-      "eyebrow": "Wichtig",
-      "title": "Text in Zahlen umwandeln",
+      "eyebrow": "Benutzerführung",
+      "title": "Der Text in input() erklärt, was eingegeben werden soll",
       "body": [
-        "Wenn du mit einer Eingabe rechnen möchtest, musst du sie oft umwandeln.",
-        "int() wandelt einen passenden Wert in eine ganze Zahl um, float() in eine Kommazahl."
+        "Der Text innerhalb der Klammern wird Prompt genannt. Er dient als Aufforderung an den Benutzer.",
+        "Ein guter Prompt macht klar, welche Eingabe erwartet wird, zum Beispiel ein Name, ein Alter oder eine Zahl.",
+        "Ohne verständliche Aufforderung weiß der Benutzer oft nicht, was er eingeben soll. Benutzerführung gehört deshalb ebenfalls zu gutem Programmcode."
       ],
-      "code": "alter = int(input(\"Wie alt bist du? \"))"
+      "code": "stadt = input(\"In welcher Stadt wohnst du? \ ")\nprint(\"Du wohnst in:\", stadt)"
     },
     {
-      "id": "quiz",
+      "id": "always-string",
+      "type": "lesson",
+      "eyebrow": "Sehr wichtig",
+      "title": "input() liefert immer einen String",
+      "body": [
+        "Auch wenn der Benutzer 25 eingibt, liefert input() zunächst den String \"25\" zurück.",
+        "Python kann nicht automatisch wissen, ob die eingegebenen Zeichen als Alter, Telefonnummer, Postleitzahl oder normaler Text gemeint sind.",
+        "Deshalb ist es deine Aufgabe als Entwickler, den Wert bei Bedarf in einen anderen Datentyp umzuwandeln.",
+        "Mit type() kannst du dir dieses Verhalten sichtbar machen."
+      ],
+      "code": "eingabe = input(\"Gib eine Zahl ein: \ ")\nprint(type(eingabe))",
+      "callout": {
+        "title": "Merksatz",
+        "text": "input() → immer str, solange du den Wert nicht selbst umwandelst."
+      }
+    },
+    {
+      "id": "quiz-string",
       "type": "quiz",
-      "eyebrow": "Kurz prüfen",
+      "eyebrow": "Verständnis prüfen",
       "title": "Welchen Typ liefert input()?",
-      "question": "Was ist der Rückgabewert von input() standardmäßig?",
-      "options": ["int", "str", "bool"],
+      "question": "Ein Benutzer tippt 42 ein. Welchen Datentyp liefert input() zunächst?",
+      "options": ["int", "str", "float"],
       "correct": 1,
-      "explanation": "Richtig. input() liefert immer einen String, solange du den Wert nicht selbst umwandelst."
+      "explanation": "Richtig. Die Zeichen 42 werden von input() zunächst als String zurückgegeben."
+    },
+    {
+      "id": "conversion-int",
+      "type": "lesson",
+      "eyebrow": "Typumwandlung",
+      "title": "Mit int() Text in eine ganze Zahl umwandeln",
+      "body": [
+        "Wenn du mit einer eingegebenen ganzen Zahl rechnen möchtest, kannst du den String mit int() in einen Integer umwandeln.",
+        "int(\"21\") ergibt den Integer 21. Erst danach kann Python damit wie mit einer Zahl rechnen.",
+        "Du kannst input() und int() direkt verschachteln. Python führt dabei zuerst die innere Funktion input() und danach int() aus.",
+        "Das Ergebnis kann anschließend in einer Variable gespeichert werden."
+      ],
+      "code": "alter = int(input(\"Wie alt bist du? \ "))\nprint(alter + 1)",
+      "term": {
+        "symbol": "int()",
+        "name": "Typumwandlung",
+        "meaning": "int() versucht einen passenden Wert in eine ganze Zahl umzuwandeln."
+      }
+    },
+    {
+      "id": "conversion-float",
+      "type": "lesson",
+      "eyebrow": "Typumwandlung",
+      "title": "Mit float() Dezimalzahlen einlesen",
+      "body": [
+        "Für Werte mit Dezimalstellen verwendest du häufig float().",
+        "Auch hier muss die Eingabe in einer Schreibweise vorliegen, die Python als Zahl verstehen kann.",
+        "In Python wird ein Punkt als Dezimaltrennzeichen verwendet. Die Eingabe 19.99 lässt sich direkt mit float() umwandeln.",
+        "Bei Benutzereingaben musst du später auch berücksichtigen, dass Menschen ungültige Werte eingeben können. Das behandeln wir später mit Fehlerbehandlung."
+      ],
+      "code": "preis = float(input(\"Preis: \ "))\nprint(preis)"
+    },
+    {
+      "id": "wrong-operation",
+      "type": "lesson",
+      "eyebrow": "Typischer Fehler",
+      "title": "Warum \"2\" + \"3\" nicht 5 ergibt",
+      "body": [
+        "Wenn zwei Eingaben Strings sind und du sie mit + verbindest, führt Python eine String-Verkettung aus.",
+        "\"2\" + \"3\" ergibt deshalb \"23\" und nicht 5.",
+        "Möchtest du mathematisch addieren, musst du beide Werte zuerst in Zahlen umwandeln.",
+        "Dieser Unterschied gehört zu den häufigsten Anfängerfehlern bei input()."
+      ],
+      "code": "a = \"2\"\nb = \"3\"\nprint(a + b)\nprint(int(a) + int(b))",
+      "callout": {
+        "title": "Fehlerdiagnose",
+        "text": "Wenn Zahlen scheinbar aneinandergehängt werden, prüfe zuerst, ob du noch mit Strings arbeitest."
+      }
+    },
+    {
+      "id": "conversion-quiz",
+      "type": "quiz",
+      "eyebrow": "Verständnis prüfen",
+      "title": "Welche Zeile kann mit einem eingegebenen Alter rechnen?",
+      "question": "Welche Schreibweise liefert eine ganze Zahl?",
+      "options": ["alter = input(\"Alter: \ ")", "alter = int(input(\"Alter: \ "))", "alter = str(input(\"Alter: \ "))"],
+      "correct": 1,
+      "explanation": "Richtig. input() liefert den String und int() wandelt ihn anschließend in eine ganze Zahl um."
+    },
+    {
+      "id": "multiple-inputs",
+      "type": "lesson",
+      "eyebrow": "Praxis",
+      "title": "Mehrere Eingaben zu einem kleinen Programm verbinden",
+      "body": [
+        "Ein Programm kann beliebig viele Eingaben nacheinander abfragen und die Ergebnisse in verschiedenen Variablen speichern.",
+        "Wichtig ist, dass du für jeden Wert bewusst entscheidest, welcher Datentyp benötigt wird.",
+        "Ein Name bleibt beispielsweise ein String, während ein Alter meist als int gebraucht wird."
+      ],
+      "code": "name = input(\"Name: \ ")\nalter = int(input(\"Alter: \ "))\nprint(name)\nprint(alter + 1)"
     },
     {
       "id": "code",
       "type": "code",
       "eyebrow": "Jetzt du",
-      "title": "Eine Zahl umwandeln",
-      "task": "Die Variable eingabe enthält den Text \"21\". Wandle ihn mit int() in eine ganze Zahl um und gib das Ergebnis plus 1 aus.",
-      "starter_code": "eingabe = \"21\"\n\n# Wandle eingabe um und gib den Wert plus 1 aus\n",
+      "title": "String in Zahl umwandeln und rechnen",
+      "task": "Die Variable eingabe enthält den String \"21\". Wandle diesen Wert mit int() in eine ganze Zahl um und gib anschließend das Ergebnis plus 1 aus.",
+      "starter_code": "eingabe = \"21\"\n\n# Wandle eingabe um und gib den Zahlenwert plus 1 aus\n",
       "expected_output": "22",
-      "xp": 70,
+      "xp": 90,
       "hints": [
-        "Text kannst du mit int(...) in eine ganze Zahl umwandeln.",
-        "Speichere int(eingabe) in einer neuen Variable oder verwende es direkt.",
-        "Am Ende soll print(int(eingabe) + 1) ausgeführt werden."
+        "input()-Werte sind Strings. Hier ist der String bereits in eingabe gespeichert.",
+        "Mit int(eingabe) erhältst du die ganze Zahl 21.",
+        "Du kannst direkt print(int(eingabe) + 1) verwenden."
       ]
     },
     {
       "id": "summary",
       "type": "summary",
       "eyebrow": "Zusammenfassung",
-      "title": "Das solltest du jetzt können",
+      "title": "Das solltest du jetzt wirklich verstanden haben",
       "items": [
-        "input() liest eine Benutzereingabe ein.",
-        "input() liefert standardmäßig str.",
-        "int() und float() wandeln Werte in Zahlentypen um.",
-        "Typumwandlung ist nötig, wenn du mit eingegebenen Zahlen rechnen willst."
+        "input() macht Programme interaktiv und wartet auf eine Benutzereingabe.",
+        "Der Text innerhalb von input() dient als Eingabeaufforderung.",
+        "input() liefert grundsätzlich einen String zurück.",
+        "int() wandelt passende Werte in ganze Zahlen um.",
+        "float() wandelt passende Werte in Gleitkommazahlen um.",
+        "Typumwandlung ist nötig, wenn du mit eingegebenen Zahlen rechnen willst.",
+        "Strings werden mit + verkettet, Zahlen werden mit + addiert.",
+        "Verschachtelte Funktionsaufrufe werden von innen nach außen ausgewertet.",
+        "Ungültige Benutzereingaben können später mit Fehlerbehandlung abgefangen werden."
       ],
-      "next": "Als Nächstes: Entscheidungen mit if, elif und else."
+      "next": "Als Nächstes lernst du, mit if, elif und else Entscheidungen in deinen Programmen zu treffen."
     }
   ]
 }
