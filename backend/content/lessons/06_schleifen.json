@@ -1,86 +1,223 @@
 {
   "id": "schleifen",
   "title": "Schleifen mit for und while",
-  "subtitle": "Code gezielt wiederholen und Abläufe automatisieren",
+  "subtitle": "Wiederholungen kontrollieren, range() verstehen und Endlosschleifen vermeiden",
   "difficulty": "Einsteiger",
-  "estimated_minutes": 26,
+  "estimated_minutes": 55,
   "steps": [
+    {
+      "id": "intro",
+      "type": "lesson",
+      "eyebrow": "Wiederholungen",
+      "title": "Warum Schleifen überhaupt gebraucht werden",
+      "body": [
+        "Programme müssen häufig dieselbe oder eine ähnliche Aufgabe mehrfach ausführen. Ohne Schleifen würdest du identischen Code immer wieder kopieren.",
+        "Schleifen automatisieren solche Wiederholungen. Du beschreibst einmal, was passieren soll, und Python führt diesen Code mehrfach aus.",
+        "Dadurch wird Code kürzer, flexibler und leichter zu ändern.",
+        "In Python begegnen dir besonders zwei Schleifenarten: for und while. Beide wiederholen Code, aber sie werden für unterschiedliche Situationen eingesetzt."
+      ],
+      "callout": {
+        "title": "Grundidee",
+        "text": "for wird häufig verwendet, wenn du über bekannte Werte oder eine Folge iterierst. while läuft, solange eine Bedingung True ist."
+      }
+    },
     {
       "id": "for",
       "type": "lesson",
-      "eyebrow": "Wiederholungen",
-      "title": "for-Schleifen",
+      "eyebrow": "for-Schleife",
+      "title": "for verarbeitet nacheinander mehrere Werte",
       "body": [
-        "Eine for-Schleife wiederholt einen Codeblock für mehrere Werte.",
-        "Mit range() kannst du Zahlenfolgen erzeugen und damit eine bestimmte Anzahl von Wiederholungen steuern."
+        "Eine for-Schleife nimmt nacheinander Werte aus einer Folge und führt den eingerückten Codeblock für jeden Wert aus.",
+        "Die Variable hinter for ist die Schleifenvariable. Sie erhält bei jedem Durchlauf den jeweils aktuellen Wert.",
+        "Auch bei Schleifen endet die Kopfzeile mit einem Doppelpunkt und der Schleifenblock wird eingerückt.",
+        "Nach dem letzten Wert endet die Schleife automatisch."
       ],
-      "code": "for zahl in range(3):\n    print(zahl)",
+      "code": "for zahl in [10, 20, 30]:\n    print(zahl)",
       "term": {
-        "symbol": "range()",
-        "name": "eingebaute Funktion",
-        "meaning": "range() erzeugt eine Zahlenfolge, die häufig in for-Schleifen verwendet wird."
+        "symbol": "for",
+        "name": "for-Schleife",
+        "meaning": "Wiederholt einen Codeblock für die Werte einer iterierbaren Folge."
       }
     },
     {
       "id": "range",
       "type": "lesson",
-      "eyebrow": "Genauer hinsehen",
-      "title": "range() verstehen",
+      "eyebrow": "Zahlenfolgen",
+      "title": "range() erzeugt Zahlenfolgen",
       "body": [
-        "range(3) liefert die Werte 0, 1 und 2. Der Endwert 3 selbst ist nicht mehr enthalten.",
-        "Mit range(1, 6) erhältst du die Werte 1 bis 5."
+        "range() ist eine eingebaute Funktion, die häufig zusammen mit for verwendet wird.",
+        "range(5) liefert die Werte 0, 1, 2, 3 und 4. Der Endwert 5 selbst gehört nicht mehr zur Folge.",
+        "Das ist wichtig: Bei range() ist der Endwert exklusiv, also ausgeschlossen.",
+        "Wenn du fünf Durchläufe brauchst, ist range(5) deshalb genau richtig."
+      ],
+      "code": "for zahl in range(5):\n    print(zahl)",
+      "term": {
+        "symbol": "range()",
+        "name": "eingebaute Funktion",
+        "meaning": "Erzeugt eine Zahlenfolge, deren Endwert nicht enthalten ist."
+      }
+    },
+    {
+      "id": "range-start-stop",
+      "type": "lesson",
+      "eyebrow": "range() genauer",
+      "title": "Start- und Endwert festlegen",
+      "body": [
+        "Mit range(start, stop) kannst du festlegen, bei welchem Wert die Zahlenfolge beginnt.",
+        "range(1, 6) liefert 1, 2, 3, 4 und 5. Der stop-Wert 6 bleibt wieder ausgeschlossen.",
+        "Dadurch kannst du menschlich vertraute Bereiche wie 1 bis 5 erzeugen, obwohl Python bei vielen Zählungen standardmäßig mit 0 beginnt."
       ],
       "code": "for zahl in range(1, 6):\n    print(zahl)"
     },
     {
-      "id": "quiz",
+      "id": "range-step",
+      "type": "lesson",
+      "eyebrow": "range() vertiefen",
+      "title": "Mit step die Schrittweite bestimmen",
+      "body": [
+        "range() kann einen dritten Wert bekommen: die Schrittweite step.",
+        "range(0, 11, 2) zählt in Zweierschritten und liefert 0, 2, 4, 6, 8 und 10.",
+        "Mit einer negativen Schrittweite kannst du rückwärts zählen, zum Beispiel range(5, 0, -1).",
+        "Damit kannst du sehr gezielt Zahlenfolgen erzeugen, ohne Werte einzeln aufzuschreiben."
+      ],
+      "code": "for zahl in range(0, 11, 2):\n    print(zahl)\n\nfor zahl in range(5, 0, -1):\n    print(zahl)"
+    },
+    {
+      "id": "range-quiz",
       "type": "quiz",
-      "eyebrow": "Kurz prüfen",
-      "title": "Wie oft läuft range(5)?",
-      "question": "Wie viele Werte liefert range(5)?",
-      "options": ["4", "5", "6"],
-      "correct": 1,
-      "explanation": "Richtig. range(5) liefert 0, 1, 2, 3 und 4 – also fünf Werte."
+      "eyebrow": "Verständnis prüfen",
+      "title": "Welche Werte liefert range(1, 6)?",
+      "question": "Welche Folge entsteht?",
+      "options": ["1, 2, 3, 4, 5", "1, 2, 3, 4, 5, 6", "0, 1, 2, 3, 4, 5"],
+      "correct": 0,
+      "explanation": "Richtig. Der Startwert 1 ist enthalten, der Endwert 6 ist ausgeschlossen."
+    },
+    {
+      "id": "accumulator",
+      "type": "lesson",
+      "eyebrow": "Wichtige Technik",
+      "title": "Mit einem Akkumulator Ergebnisse sammeln",
+      "body": [
+        "In Schleifen möchtest du häufig Werte aufsummieren oder zählen. Dafür wird oft eine Variable vor der Schleife mit einem Startwert angelegt.",
+        "Diese Variable nennt man in diesem Zusammenhang Akkumulator. Sie sammelt während der Schleifendurchläufe ein Ergebnis.",
+        "summe += zahl bedeutet: Nimm den bisherigen Wert von summe, addiere zahl und speichere das neue Ergebnis wieder in summe.",
+        "Dieses Muster begegnet dir sehr häufig bei Summen, Punkteständen, Statistiken und Auswertungen."
+      ],
+      "code": "summe = 0\n\nfor zahl in range(1, 4):\n    summe += zahl\n\nprint(summe)",
+      "term": {
+        "symbol": "Akkumulator",
+        "name": "Sammelvariable",
+        "meaning": "Eine Variable, die während mehrerer Schleifendurchläufe ein Ergebnis sammelt oder fortschreibt."
+      }
     },
     {
       "id": "while",
       "type": "lesson",
-      "eyebrow": "Bedingte Wiederholung",
-      "title": "while-Schleifen",
+      "eyebrow": "while-Schleife",
+      "title": "while läuft, solange eine Bedingung True ist",
       "body": [
-        "Eine while-Schleife läuft so lange, wie ihre Bedingung True ist.",
-        "Du musst darauf achten, dass sich die Bedingung irgendwann ändert. Sonst entsteht eine Endlosschleife."
+        "Eine while-Schleife wird nicht durch eine feste Zahlenfolge gesteuert, sondern durch eine Bedingung.",
+        "Vor jedem Durchlauf prüft Python die Bedingung erneut. Ist sie True, wird der eingerückte Block ausgeführt. Ist sie False, endet die Schleife.",
+        "Eine while-Schleife eignet sich gut, wenn du vorher nicht genau weißt, wie oft etwas wiederholt werden muss.",
+        "Damit die Schleife endet, muss sich normalerweise etwas verändern, das die Bedingung beeinflusst."
       ],
-      "code": "zahl = 1\nwhile zahl <= 3:\n    print(zahl)\n    zahl += 1"
+      "code": "zahl = 1\n\nwhile zahl <= 3:\n    print(zahl)\n    zahl += 1",
+      "term": {
+        "symbol": "while",
+        "name": "while-Schleife",
+        "meaning": "Wiederholt einen Codeblock, solange ihre Bedingung True ergibt."
+      }
+    },
+    {
+      "id": "infinite-loop",
+      "type": "lesson",
+      "eyebrow": "Fehler vermeiden",
+      "title": "Endlosschleifen entstehen, wenn die Bedingung nie False wird",
+      "body": [
+        "Wenn eine while-Bedingung dauerhaft True bleibt, endet die Schleife nicht von selbst. Das nennt man Endlosschleife.",
+        "Im Beispiel while zahl <= 3 muss zahl im Schleifenblock verändert werden. Ohne zahl += 1 würde zahl immer 1 bleiben.",
+        "Endlosschleifen können ein Programm blockieren oder unnötig Rechenleistung verbrauchen.",
+        "PyLab beendet deine Code-Ausführung deshalb nach einer gewissen Zeit, damit eine versehentliche Endlosschleife nicht dauerhaft läuft."
+      ],
+      "code": "zahl = 1\n\nwhile zahl <= 3:\n    print(zahl)\n    zahl += 1",
+      "callout": {
+        "title": "Prüffrage bei while",
+        "text": "Welche Anweisung sorgt dafür, dass die Bedingung irgendwann False werden kann?"
+      }
+    },
+    {
+      "id": "break",
+      "type": "lesson",
+      "eyebrow": "Schleifen steuern",
+      "title": "break beendet eine Schleife vorzeitig",
+      "body": [
+        "Mit break kannst du eine Schleife sofort verlassen, auch wenn eigentlich noch weitere Durchläufe möglich wären.",
+        "Das ist nützlich, wenn während der Schleife ein bestimmtes Ziel erreicht wurde.",
+        "break beendet nur die Schleife, in der es ausgeführt wird. Danach läuft das Programm hinter der Schleife weiter."
+      ],
+      "code": "for zahl in range(1, 10):\n    if zahl == 4:\n        break\n    print(zahl)",
+      "term": {
+        "symbol": "break",
+        "name": "Schleifensteuerung",
+        "meaning": "Beendet die aktuelle Schleife sofort."
+      }
+    },
+    {
+      "id": "continue",
+      "type": "lesson",
+      "eyebrow": "Schleifen steuern",
+      "title": "continue überspringt nur den aktuellen Durchlauf",
+      "body": [
+        "continue beendet nicht die gesamte Schleife. Stattdessen wird nur der aktuelle Durchlauf abgebrochen.",
+        "Danach beginnt die Schleife mit dem nächsten Wert oder der nächsten Bedingungsprüfung.",
+        "Das ist praktisch, wenn bestimmte Werte ausgelassen werden sollen."
+      ],
+      "code": "for zahl in range(1, 6):\n    if zahl == 3:\n        continue\n    print(zahl)"
+    },
+    {
+      "id": "loop-choice-quiz",
+      "type": "quiz",
+      "eyebrow": "Verständnis prüfen",
+      "title": "Wann passt while besser?",
+      "question": "Welche Situation ist typisch für eine while-Schleife?",
+      "options": ["Genau fünf Zahlen ausgeben", "Solange nach Eingaben fragen, bis der Benutzer 'exit' schreibt", "Jedes Element einer festen Liste einmal anzeigen"],
+      "correct": 1,
+      "explanation": "Richtig. Bei while hängt die Anzahl der Durchläufe von einer Bedingung ab und muss vorher nicht feststehen."
     },
     {
       "id": "code",
       "type": "code",
       "eyebrow": "Jetzt du",
-      "title": "Zahlen von 1 bis 5 ausgeben",
+      "title": "Zahlen von 1 bis 5 mit for ausgeben",
       "task": "Schreibe eine for-Schleife mit range(), die die Zahlen 1 bis 5 jeweils in einer eigenen Zeile ausgibt.",
       "starter_code": "# Schreibe hier deine for-Schleife\n",
       "expected_output": "1\n2\n3\n4\n5",
-      "xp": 90,
+      "xp": 110,
       "hints": [
-        "Du brauchst eine for-Schleife und range().",
-        "Der Startwert soll 1 sein und der Endwert 5 noch enthalten sein.",
-        "Verwende range(1, 6) und gib die Schleifenvariable mit print() aus."
+        "Die Schleifenvariable kann zum Beispiel zahl heißen.",
+        "Du brauchst range(1, 6), weil der Endwert nicht enthalten ist.",
+        "Im eingerückten Schleifenblock verwendest du print(zahl)."
       ]
     },
     {
       "id": "summary",
       "type": "summary",
       "eyebrow": "Zusammenfassung",
-      "title": "Das solltest du jetzt können",
+      "title": "Das solltest du jetzt wirklich verstanden haben",
       "items": [
-        "for wiederholt Code für mehrere Werte.",
-        "range() erzeugt Zahlenfolgen.",
-        "Der Endwert von range() ist nicht enthalten.",
-        "while läuft solange eine Bedingung True ist.",
-        "Bei while musst du Endlosschleifen vermeiden."
+        "Schleifen vermeiden wiederholten, kopierten Code.",
+        "for verarbeitet Werte einer Folge nacheinander.",
+        "Die Schleifenvariable erhält bei jedem Durchlauf den aktuellen Wert.",
+        "range(stop) beginnt standardmäßig bei 0 und schließt stop aus.",
+        "range(start, stop, step) erlaubt Startwert, Endwert und Schrittweite.",
+        "Ein Akkumulator sammelt Ergebnisse über mehrere Durchläufe hinweg.",
+        "while läuft, solange eine Bedingung True ist.",
+        "Bei while muss sich die Bedingung normalerweise irgendwann verändern, sonst droht eine Endlosschleife.",
+        "break beendet eine Schleife sofort.",
+        "continue überspringt nur den aktuellen Durchlauf.",
+        "Einrückungen bestimmen auch bei Schleifen den Codeblock."
       ],
-      "next": "Als Nächstes folgen Strings und Datenstrukturen."
+      "next": "Als Nächstes sollten Strings, Listen, Tupel, Sets und Dictionaries als größere Datenstrukturen folgen."
     }
   ]
 }
