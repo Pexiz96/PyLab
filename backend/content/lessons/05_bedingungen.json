@@ -1,0 +1,86 @@
+{
+  "id": "bedingungen",
+  "title": "Entscheidungen mit if, elif und else",
+  "subtitle": "Programme abhängig von Bedingungen reagieren lassen",
+  "difficulty": "Einsteiger",
+  "estimated_minutes": 24,
+  "steps": [
+    {
+      "id": "if",
+      "type": "lesson",
+      "eyebrow": "Kontrollfluss",
+      "title": "if prüft eine Bedingung",
+      "body": [
+        "Mit if lässt du Python entscheiden, ob ein eingerückter Codeblock ausgeführt wird.",
+        "Die Bedingung muss True oder False ergeben. Nach der Bedingung steht ein Doppelpunkt."
+      ],
+      "code": "alter = 20\nif alter >= 18:\n    print(\"Volljährig\")",
+      "term": {
+        "symbol": ":",
+        "name": "Doppelpunkt",
+        "meaning": "Bei if, Schleifen, Funktionen und Klassen leitet der Doppelpunkt einen eingerückten Codeblock ein."
+      }
+    },
+    {
+      "id": "comparison",
+      "type": "lesson",
+      "eyebrow": "Vergleichen",
+      "title": "Vergleichsoperatoren",
+      "body": [
+        "== bedeutet ist gleich. != bedeutet ist ungleich. > und < vergleichen Größen, >= und <= schließen Gleichheit ein.",
+        "Wichtig: = weist einen Wert zu, == vergleicht zwei Werte."
+      ],
+      "code": "zahl = 10\nprint(zahl == 10)"
+    },
+    {
+      "id": "quiz",
+      "type": "quiz",
+      "eyebrow": "Kurz prüfen",
+      "title": "Welcher Operator vergleicht Gleichheit?",
+      "question": "Wähle den richtigen Vergleichsoperator.",
+      "options": ["=", "==", ">="],
+      "correct": 1,
+      "explanation": "Richtig. == ist der Vergleichsoperator für Gleichheit. = ist dagegen der Zuweisungsoperator."
+    },
+    {
+      "id": "elif-else",
+      "type": "lesson",
+      "eyebrow": "Mehrere Fälle",
+      "title": "elif und else",
+      "body": [
+        "elif steht für einen weiteren Bedingungsfall, wenn vorherige Bedingungen nicht erfüllt waren.",
+        "else fängt den übrigen Fall ab und benötigt keine eigene Bedingung."
+      ],
+      "code": "punkte = 75\nif punkte >= 90:\n    print(\"Sehr gut\")\nelif punkte >= 50:\n    print(\"Bestanden\")\nelse:\n    print(\"Nicht bestanden\")"
+    },
+    {
+      "id": "code",
+      "type": "code",
+      "eyebrow": "Jetzt du",
+      "title": "Volljährigkeit prüfen",
+      "task": "Die Variable alter ist 20. Schreibe eine if-Bedingung, die bei mindestens 18 Jahren genau Volljährig ausgibt.",
+      "starter_code": "alter = 20\n\n# Schreibe hier deine if-Bedingung\n",
+      "expected_output": "Volljährig",
+      "xp": 80,
+      "hints": [
+        "Vergleiche alter mit 18.",
+        "Für mindestens verwendest du >=.",
+        "Die Bedingung beginnt mit if alter >= 18: und der print()-Aufruf muss eingerückt sein."
+      ]
+    },
+    {
+      "id": "summary",
+      "type": "summary",
+      "eyebrow": "Zusammenfassung",
+      "title": "Das solltest du jetzt können",
+      "items": [
+        "if führt Code nur bei einer wahren Bedingung aus.",
+        "== vergleicht, = weist zu.",
+        "elif prüft weitere Fälle.",
+        "else behandelt den verbleibenden Fall.",
+        "Codeblöcke werden in Python eingerückt."
+      ],
+      "next": "Als Nächstes: Wiederholungen mit for- und while-Schleifen."
+    }
+  ]
+}
