@@ -6,7 +6,7 @@ import {
   Menu, Play, RotateCcw, Settings, Sparkles, Trophy
 } from "lucide-react";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const API = "/api";
 
 const nav = [
   ["Heute lernen", Home],
@@ -38,8 +38,8 @@ export default function HomePage() {
     async function load() {
       try {
         const [lessonRes, profileRes] = await Promise.all([
-          fetch(`${API}/lessons`),
-          fetch(`${API}/profile`),
+          fetch(`${API}/lessons`, { cache: "no-store" }),
+          fetch(`${API}/profile`, { cache: "no-store" }),
         ]);
         if (!lessonRes.ok || !profileRes.ok) throw new Error("Backend antwortet nicht korrekt.");
 
@@ -108,7 +108,7 @@ export default function HomePage() {
   }
 
   async function refreshProfile() {
-    const data = await fetch(`${API}/profile`).then(r => r.json());
+    const data = await fetch(`${API}/profile`, { cache: "no-store" }).then(r => r.json());
     setProfile(data);
   }
 
@@ -189,7 +189,7 @@ export default function HomePage() {
   }
 
   if (loading) return <div className="startup"><div className="loader">PyLab wird geladen …</div></div>;
-  if (loadError) return <div className="startup"><div className="error-card"><h1>PyLab konnte nicht starten</h1><p>{loadError}</p><code>{API}/health</code></div></div>;
+  if (loadError) return <div className="startup"><div className="error-card"><h1>PyLab konnte nicht starten</h1><p>{loadError}</p><code>/api/health</code></div></div>;
   if (!lesson || !step) return <div className="startup">Keine Lektion verfügbar.</div>;
 
   return (
@@ -199,11 +199,9 @@ export default function HomePage() {
           <div className="brand-mark"><Sparkles size={19}/></div>
           {!collapsed && <div><div className="brand">PyLab</div><div className="brand-sub">Python Learning Lab</div></div>}
         </div>
-
         <button className="collapse-btn" onClick={() => setCollapsed(v => !v)}>
           <Menu size={18}/>{!collapsed && <span>Menü einklappen</span>}
         </button>
-
         <nav>
           {nav.map(([name, Icon]) => (
             <button key={name} className={`nav-item ${activeNav === name ? "active" : ""}`} onClick={() => setActiveNav(name)} title={name}>
@@ -211,7 +209,6 @@ export default function HomePage() {
             </button>
           ))}
         </nav>
-
         <div className="sidebar-bottom">
           <button className="nav-item"><Settings size={19}/>{!collapsed && <span>Einstellungen</span>}</button>
         </div>
@@ -233,7 +230,6 @@ export default function HomePage() {
               <h1>Schritt für Schritt Python lernen</h1>
               <p>Alle Lektionen bleiben frei zugänglich. Dein Fortschritt wird automatisch gespeichert.</p>
             </div>
-
             <div className="path-list">
               {lessons.map((item, index) => {
                 const saved = lessonProgress(item.id);
@@ -330,7 +326,6 @@ export default function HomePage() {
                   </button>
                 ))}
               </div>
-              <button className="path-link" onClick={() => setActiveNav("Lernpfad")}>Alle Lektionen anzeigen</button>
             </aside>
           </div>
         )}
