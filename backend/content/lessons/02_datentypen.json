@@ -1,89 +1,183 @@
 {
   "id": "datentypen",
   "title": "Datentypen verstehen",
-  "subtitle": "str, int, float und bool sicher unterscheiden",
+  "subtitle": "str, int, float und bool sicher unterscheiden und bewusst einsetzen",
   "difficulty": "Einsteiger",
-  "estimated_minutes": 18,
+  "estimated_minutes": 40,
   "steps": [
     {
       "id": "intro",
       "type": "lesson",
-      "eyebrow": "Grundlage",
-      "title": "Warum gibt es Datentypen?",
+      "eyebrow": "Grundverständnis",
+      "title": "Warum Datentypen wichtig sind",
       "body": [
-        "Python muss wissen, welche Art von Wert du speicherst. Text, ganze Zahlen, Kommazahlen und Wahrheitswerte verhalten sich unterschiedlich.",
-        "Der Datentyp beschreibt also, welche Art von Wert vorliegt und welche Operationen damit sinnvoll sind."
+        "Ein Wert ist für Python nicht einfach nur ein Wert. Python unterscheidet verschiedene Arten von Daten, sogenannte Datentypen.",
+        "Der Datentyp bestimmt, wie ein Wert gespeichert und verarbeitet wird und welche Operationen damit sinnvoll sind.",
+        "Die Zahl 5 und der Text \"5\" sehen für uns ähnlich aus, sind für Python aber grundverschieden. Mit der Zahl 5 kannst du rechnen. Der Text \"5\" ist zunächst nur eine Zeichenfolge.",
+        "Wenn du Datentypen verstanden hast, werden viele spätere Themen wie Eingaben, Vergleiche, Listen und Funktionen deutlich leichter."
       ],
       "callout": {
-        "title": "Merke",
-        "text": "Der Wert 5 ist eine Zahl. Der Wert \"5\" ist Text. Sie sehen ähnlich aus, sind für Python aber verschieden."
+        "title": "Merksatz",
+        "text": "Nicht nur der sichtbare Inhalt eines Wertes zählt, sondern auch sein Datentyp."
       }
     },
     {
-      "id": "str-int",
+      "id": "str",
       "type": "lesson",
-      "eyebrow": "Datentypen",
-      "title": "str und int",
+      "eyebrow": "Datentyp 1",
+      "title": "str – Strings sind Text",
       "body": [
-        "str steht für String und bedeutet Text. Strings werden normalerweise in Anführungszeichen geschrieben.",
-        "int steht für Integer und bedeutet ganze Zahl. Integer werden ohne Anführungszeichen geschrieben."
+        "str ist die Kurzform von String. Ein String ist eine Zeichenkette, also Text.",
+        "Strings werden in Python normalerweise in einfache oder doppelte Anführungszeichen geschrieben.",
+        "Auch Zeichen, die wie Zahlen aussehen, können Strings sein. \"123\" ist Text, weil die Zeichen in Anführungszeichen stehen.",
+        "Strings können Buchstaben, Zahlen, Leerzeichen und Sonderzeichen enthalten."
       ],
-      "code": "name = \"PyLab\"\nalter = 30",
+      "code": "name = \"PyLab\"\nplz = \"06844\"\nmeldung = \"Python macht Fortschritt!\"",
       "term": {
-        "symbol": "str / int",
-        "name": "Datentypen",
-        "meaning": "str speichert Text, int speichert ganze Zahlen."
+        "symbol": "str",
+        "name": "String",
+        "meaning": "Ein Datentyp für Text beziehungsweise Zeichenketten."
       }
     },
     {
-      "id": "quiz",
+      "id": "int",
+      "type": "lesson",
+      "eyebrow": "Datentyp 2",
+      "title": "int – ganze Zahlen",
+      "body": [
+        "int steht für Integer und beschreibt ganze Zahlen ohne Nachkommastellen.",
+        "Positive Zahlen, negative Zahlen und 0 können Integer sein.",
+        "Integer werden ohne Anführungszeichen geschrieben. Dadurch erkennt Python sie als Zahlen und kann mit ihnen rechnen.",
+        "Wenn du 30 in Anführungszeichen setzt, wird daraus dagegen ein String."
+      ],
+      "code": "alter = 30\npunkte = 125\ntemperatur = -3\nnullwert = 0",
+      "term": {
+        "symbol": "int",
+        "name": "Integer",
+        "meaning": "Ein Datentyp für ganze Zahlen ohne Nachkommastellen."
+      }
+    },
+    {
+      "id": "str-int-quiz",
       "type": "quiz",
-      "eyebrow": "Kurz prüfen",
+      "eyebrow": "Verständnis prüfen",
       "title": "Welcher Wert ist ein Integer?",
       "question": "Wähle den Wert mit dem Datentyp int.",
-      "options": ["\"30\"", "30", "30.5"],
+      "options": ["\"30\"", "30", "30.0"],
       "correct": 1,
-      "explanation": "Richtig. 30 ist ohne Anführungszeichen eine ganze Zahl und damit ein int."
+      "explanation": "Richtig. 30 ist ohne Anführungszeichen eine ganze Zahl und damit ein int. \"30\" ist str und 30.0 ist float."
     },
     {
-      "id": "float-bool",
+      "id": "float",
       "type": "lesson",
-      "eyebrow": "Datentypen",
-      "title": "float und bool",
+      "eyebrow": "Datentyp 3",
+      "title": "float – Zahlen mit Dezimalstellen",
       "body": [
-        "float steht für Gleitkommazahl. In Python wird dafür ein Punkt als Dezimaltrennzeichen verwendet, zum Beispiel 19.99.",
-        "bool steht für Boolean. Ein bool kann nur True oder False sein. Diese Werte werden ohne Anführungszeichen und mit großem Anfangsbuchstaben geschrieben."
+        "float steht für Floating Point Number, auf Deutsch Gleitkommazahl.",
+        "In Python wird für Dezimalzahlen ein Punkt verwendet, kein deutsches Komma. 19.99 ist korrekt, 19,99 würde etwas anderes bedeuten.",
+        "Auch Werte wie 3.0 haben den Datentyp float, obwohl die Nachkommastelle mathematisch keinen Unterschied zum Integer 3 macht.",
+        "Floats werden zum Beispiel für Preise, Messwerte, Prozentwerte oder Berechnungen mit Nachkommastellen verwendet."
       ],
-      "code": "preis = 19.99\nist_online = True"
+      "code": "preis = 19.99\ngroesse = 1.82\nprozent = 87.5",
+      "term": {
+        "symbol": "float",
+        "name": "Gleitkommazahl",
+        "meaning": "Ein Datentyp für Zahlen mit Dezimalstellen."
+      }
+    },
+    {
+      "id": "bool",
+      "type": "lesson",
+      "eyebrow": "Datentyp 4",
+      "title": "bool – Wahr oder Falsch",
+      "body": [
+        "bool steht für Boolean und kann nur zwei Werte annehmen: True oder False.",
+        "True bedeutet wahr, False bedeutet falsch. Beide werden ohne Anführungszeichen und mit großem Anfangsbuchstaben geschrieben.",
+        "Booleans sind besonders wichtig für Bedingungen. Später kann dein Programm damit zum Beispiel entscheiden, ob ein Benutzer eingeloggt ist oder ob ein Spiel beendet wurde.",
+        "\"True\" mit Anführungszeichen wäre dagegen nur der Text True und kein bool."
+      ],
+      "code": "ist_online = True\nspiel_vorbei = False",
+      "term": {
+        "symbol": "bool",
+        "name": "Boolean",
+        "meaning": "Ein Wahrheitswert mit genau zwei Möglichkeiten: True oder False."
+      }
+    },
+    {
+      "id": "type-function",
+      "type": "lesson",
+      "eyebrow": "Werkzeug",
+      "title": "Mit type() den Datentyp untersuchen",
+      "body": [
+        "Python stellt die eingebaute Funktion type() bereit. Sie zeigt dir, welchen Datentyp ein Wert oder eine Variable hat.",
+        "Das ist beim Lernen und bei der Fehlersuche sehr hilfreich, weil du nicht raten musst, welchen Typ Python tatsächlich verwendet.",
+        "Wenn du print(type(wert)) verwendest, wird zum Beispiel <class 'int'> oder <class 'str'> ausgegeben."
+      ],
+      "code": "wert = 42\nprint(type(wert))\n\ntext = \"42\"\nprint(type(text))",
+      "term": {
+        "symbol": "type()",
+        "name": "eingebaute Funktion",
+        "meaning": "type() liefert den Datentyp eines Wertes zurück."
+      }
+    },
+    {
+      "id": "operations",
+      "type": "lesson",
+      "eyebrow": "Warum Typen zählen",
+      "title": "Der Datentyp verändert das Ergebnis einer Operation",
+      "body": [
+        "Bei Zahlen bedeutet + Addition. Bei Strings bedeutet + dagegen Verkettung, also das Aneinanderhängen von Text.",
+        "2 + 3 ergibt deshalb 5. \"2\" + \"3\" ergibt dagegen den String \"23\".",
+        "Dieser Unterschied ist eine der wichtigsten Ursachen für Anfängerfehler. Wenn ein Ergebnis unerwartet aussieht, prüfe deshalb immer auch den Datentyp."
+      ],
+      "code": "print(2 + 3)\nprint(\"2\" + \"3\")",
+      "callout": {
+        "title": "Typischer Fehler",
+        "text": "Wenn aus 2 und 3 plötzlich 23 wird, arbeitest du sehr wahrscheinlich mit Strings statt mit Zahlen."
+      }
+    },
+    {
+      "id": "mixed-quiz",
+      "type": "quiz",
+      "eyebrow": "Verständnis prüfen",
+      "title": "Welchen Datentyp hat der Wert?",
+      "question": "Welchen Datentyp hat True ohne Anführungszeichen?",
+      "options": ["str", "bool", "int"],
+      "correct": 1,
+      "explanation": "Richtig. True und False sind die beiden Werte des Datentyps bool."
     },
     {
       "id": "code",
       "type": "code",
       "eyebrow": "Jetzt du",
-      "title": "Vier Datentypen ausgeben",
-      "task": "Die vier Variablen sind vorbereitet. Gib jede Variable mit print() in einer eigenen Zeile aus.",
-      "starter_code": "name = \"PyLab\"\nalter = 30\npreis = 19.99\naktiv = True\n\n# Gib alle vier Variablen aus\n",
+      "title": "Vier Datentypen selbst verwenden",
+      "task": "Lege vier Variablen an: name mit PyLab, alter mit 30, preis mit 19.99 und aktiv mit True. Gib danach alle vier Variablen jeweils in einer eigenen Zeile aus.",
+      "starter_code": "# Lege hier vier Variablen mit unterschiedlichen Datentypen an\n\n# Gib sie anschließend jeweils mit print() aus\n",
       "expected_output": "PyLab\n30\n19.99\nTrue",
-      "xp": 60,
+      "xp": 80,
       "hints": [
-        "Du brauchst vier print()-Aufrufe.",
-        "Übergebe jeweils den Variablennamen an print().",
-        "Beginne mit print(name), danach alter, preis und aktiv."
+        "name braucht Anführungszeichen, weil PyLab Text ist.",
+        "alter und preis werden ohne Anführungszeichen geschrieben; preis benötigt einen Punkt.",
+        "aktiv = True wird ohne Anführungszeichen geschrieben. Danach brauchst du vier print()-Aufrufe."
       ]
     },
     {
       "id": "summary",
       "type": "summary",
       "eyebrow": "Zusammenfassung",
-      "title": "Das solltest du jetzt können",
+      "title": "Das solltest du jetzt wirklich verstanden haben",
       "items": [
-        "str steht für Text.",
-        "int steht für ganze Zahlen.",
-        "float steht für Kommazahlen.",
-        "bool kann True oder False sein.",
-        "Anführungszeichen können den Datentyp verändern."
+        "Ein Datentyp beschreibt, welche Art von Wert Python verarbeitet.",
+        "str steht für Text und wird typischerweise in Anführungszeichen geschrieben.",
+        "int steht für ganze Zahlen ohne Nachkommastellen.",
+        "float steht für Zahlen mit Dezimalstellen und verwendet einen Punkt als Dezimaltrennzeichen.",
+        "bool kennt nur True und False.",
+        "Die gleichen sichtbaren Zeichen können je nach Schreibweise unterschiedliche Datentypen haben.",
+        "type() hilft dir, den tatsächlichen Datentyp zu untersuchen.",
+        "Operatoren können sich je nach Datentyp unterschiedlich verhalten.",
+        "Anführungszeichen verändern häufig die Bedeutung eines Wertes."
       ],
-      "next": "Als Nächstes: Operatoren und Berechnungen."
+      "next": "Als Nächstes lernst du Rechen-, Vergleichs- und Zuweisungsoperatoren genauer kennen."
     }
   ]
 }
