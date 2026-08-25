@@ -1,60 +1,99 @@
 {
   "id": "python-start",
   "title": "Dein Start mit Python",
-  "subtitle": "Ausgabe, Variablen und dein erster eigener Code",
+  "subtitle": "Verstehen, wie Python arbeitet, Ausgaben erzeugen und Variablen nutzen",
   "difficulty": "Einsteiger",
-  "estimated_minutes": 15,
+  "estimated_minutes": 35,
   "steps": [
     {
       "id": "welcome",
       "type": "lesson",
       "eyebrow": "Willkommen",
-      "title": "Was ist Python?",
+      "title": "Was ist Python eigentlich?",
       "body": [
-        "Python ist eine Programmiersprache. Mit ihr kannst du einem Computer Schritt für Schritt sagen, was er tun soll.",
-        "In PyLab lernst du nicht nur Befehle auswendig. Du sollst verstehen, warum der Code funktioniert."
+        "Python ist eine Programmiersprache. Eine Programmiersprache ist eine Sprache mit festen Regeln, mit der du Anweisungen für einen Computer formulierst.",
+        "Der Computer versteht nicht automatisch, was du meinst. Deshalb muss dein Code eindeutig sein. Python liest deine Anweisungen, wertet sie aus und führt sie in einer bestimmten Reihenfolge aus.",
+        "Python ist besonders beliebt, weil die Schreibweise vergleichsweise klar ist. Trotzdem gelten feste Regeln. Diese Regeln nennt man Syntax.",
+        "In PyLab lernst du deshalb nicht nur, was du schreiben musst, sondern auch, warum die Schreibweise funktioniert und was Python dabei intern betrachtet."
       ],
+      "term": {
+        "symbol": "Syntax",
+        "name": "Schreibregeln einer Programmiersprache",
+        "meaning": "Syntax beschreibt, wie Code geschrieben sein muss, damit Python ihn korrekt verstehen kann."
+      },
       "callout": {
-        "title": "Dein Ziel",
-        "text": "Nach dieser Lektion kannst du Text ausgeben, eine Variable anlegen und deinen ersten kleinen Python-Code selbst schreiben."
+        "title": "Dein Ziel in dieser Lektion",
+        "text": "Du verstehst den grundlegenden Ablauf eines Python-Programms, kannst Ausgaben erzeugen, Variablen anlegen und deinen ersten eigenen Code schreiben."
       }
+    },
+    {
+      "id": "execution",
+      "type": "lesson",
+      "eyebrow": "Verständnis",
+      "title": "Python arbeitet Anweisungen von oben nach unten ab",
+      "body": [
+        "Ein einfaches Python-Programm wird normalerweise Zeile für Zeile von oben nach unten ausgeführt.",
+        "Das bedeutet: Die Reihenfolge deiner Anweisungen ist wichtig. Eine Variable muss beispielsweise angelegt worden sein, bevor du sie benutzen kannst.",
+        "Wenn Python auf einen Fehler trifft, wird die normale Ausführung in vielen Fällen an dieser Stelle beendet und du erhältst eine Fehlermeldung. Fehlermeldungen sind deshalb keine Katastrophe, sondern Hinweise darauf, welche Regel verletzt wurde."
+      ],
+      "code": "print(\"Erste Zeile\")\nprint(\"Zweite Zeile\")\nprint(\"Dritte Zeile\")"
     },
     {
       "id": "print",
       "type": "lesson",
-      "eyebrow": "Grundlage 1",
-      "title": "Text mit print() ausgeben",
+      "eyebrow": "Grundlage",
+      "title": "Mit print() Werte ausgeben",
       "body": [
-        "Mit print() gibst du etwas in der Konsole aus.",
-        "print ist der Name einer eingebauten Python-Funktion. Die runden Klammern gehören zum Funktionsaufruf."
+        "Mit print() kannst du Werte in der Konsole ausgeben. Die Konsole ist der Bereich, in dem ein Programm Textausgaben anzeigen kann.",
+        "print ist der Name einer eingebauten Python-Funktion. Eine Funktion ist ein wiederverwendbarer Programmbaustein, der eine bestimmte Aufgabe erledigt.",
+        "Die runden Klammern gehören zum Funktionsaufruf. Zwischen die Klammern kommt der Wert, den print() verarbeiten soll.",
+        "Text wird in Python als String behandelt. Strings werden meistens in einfache oder doppelte Anführungszeichen gesetzt."
       ],
-      "code": "print(\"Hallo PyLab\")",
+      "code": "print(\"Hallo PyLab\")\nprint(\"Ich lerne Python\")",
       "term": {
         "symbol": "print()",
-        "name": "Funktion",
-        "meaning": "Eine Funktion führt eine bestimmte Aufgabe aus. print() gibt Werte aus."
+        "name": "eingebaute Funktion",
+        "meaning": "print() gibt einen oder mehrere Werte in der Konsole aus."
+      }
+    },
+    {
+      "id": "quotes",
+      "type": "lesson",
+      "eyebrow": "Genauer hinsehen",
+      "title": "Warum Text Anführungszeichen braucht",
+      "body": [
+        "Wenn du print(\"Hallo\") schreibst, erkennt Python Hallo als Text, weil der Inhalt in Anführungszeichen steht.",
+        "Schreibst du dagegen print(Hallo), sucht Python nach einem Namen mit der Bezeichnung Hallo. Existiert dieser Name nicht, entsteht ein NameError.",
+        "Damit unterscheidet Python klar zwischen einem Textwert und einem Namen, der auf einen gespeicherten Wert verweist."
+      ],
+      "code": "print(\"Hallo\")\n\n# print(Hallo)  # würde ohne zuvor definierte Variable einen Fehler erzeugen",
+      "callout": {
+        "title": "Typischer Anfängerfehler",
+        "text": "Anführungszeichen nicht vergessen, wenn du echten Text direkt in den Code schreibst."
       }
     },
     {
       "id": "print-quiz",
       "type": "quiz",
-      "eyebrow": "Kurz prüfen",
-      "title": "Welche Zeile gibt Text aus?",
-      "question": "Wähle die richtige Python-Zeile.",
-      "options": ["say(\"Hallo\")", "print(\"Hallo\")", "text = print"],
+      "eyebrow": "Verständnis prüfen",
+      "title": "Welche Zeile gibt den Text Hallo aus?",
+      "question": "Wähle die Zeile, die direkt den Text Hallo ausgibt.",
+      "options": ["print(Hallo)", "print(\"Hallo\")", "Hallo = print"],
       "correct": 1,
-      "explanation": "Richtig. print() ist die eingebaute Python-Funktion für Ausgaben."
+      "explanation": "Richtig. Durch die Anführungszeichen erkennt Python Hallo als String und print() gibt diesen Wert aus."
     },
     {
       "id": "variable",
       "type": "lesson",
-      "eyebrow": "Grundlage 2",
-      "title": "Werte in Variablen speichern",
+      "eyebrow": "Grundlage",
+      "title": "Variablen speichern Werte unter einem Namen",
       "body": [
-        "Eine Variable ist ein Name, unter dem du einen Wert speicherst.",
-        "Im Beispiel bekommt die Variable name den Text PyLab."
+        "Eine Variable kannst du dir als beschrifteten Verweis auf einen Wert vorstellen. Statt denselben Wert immer wieder direkt zu schreiben, gibst du ihm einen aussagekräftigen Namen.",
+        "Bei name = \"PyLab\" steht links der Variablenname name und rechts der Wert \"PyLab\".",
+        "Das Gleichheitszeichen = ist hier kein mathematisches Gleichheitszeichen. In Python ist es der Zuweisungsoperator. Es weist dem Namen auf der linken Seite den Wert auf der rechten Seite zu.",
+        "Nach der Zuweisung kannst du den Variablennamen an anderen Stellen verwenden, zum Beispiel in print(name)."
       ],
-      "code": "name = \"PyLab\"",
+      "code": "name = \"PyLab\"\nprint(name)",
       "term": {
         "symbol": "=",
         "name": "Zuweisungsoperator",
@@ -62,33 +101,72 @@
       }
     },
     {
+      "id": "variable-names",
+      "type": "lesson",
+      "eyebrow": "Sauber programmieren",
+      "title": "Gute Variablennamen machen Code verständlich",
+      "body": [
+        "Variablennamen sollten beschreiben, was gespeichert wird. alter ist verständlicher als a, wenn tatsächlich ein Alter gespeichert wird.",
+        "Python unterscheidet Groß- und Kleinschreibung. name und Name sind daher zwei unterschiedliche Bezeichner.",
+        "Ein Variablenname darf Buchstaben, Ziffern und Unterstriche enthalten, darf aber nicht mit einer Ziffer beginnen. Leerzeichen sind ebenfalls nicht erlaubt.",
+        "In Python wird für mehrere Wörter häufig snake_case verwendet, zum Beispiel aktueller_spieler oder maximale_punktzahl."
+      ],
+      "code": "vorname = \"Alex\"\nmaximale_punktzahl = 100\naktueller_spieler = \"X\""
+    },
+    {
+      "id": "reassignment",
+      "type": "lesson",
+      "eyebrow": "Werte verändern",
+      "title": "Eine Variable kann später einen neuen Wert bekommen",
+      "body": [
+        "Der Name Variable deutet bereits an, dass sich der gespeicherte Wert verändern kann.",
+        "Wenn du einer vorhandenen Variable erneut einen Wert zuweist, verweist sie anschließend auf den neuen Wert.",
+        "Beim folgenden Beispiel wird zuerst 10 und später 15 ausgegeben. Die zweite Zuweisung ersetzt für die weitere Programmausführung den zuvor verwendeten Wert."
+      ],
+      "code": "punkte = 10\nprint(punkte)\n\npunkte = 15\nprint(punkte)"
+    },
+    {
+      "id": "variable-quiz",
+      "type": "quiz",
+      "eyebrow": "Verständnis prüfen",
+      "title": "Was wird am Ende ausgegeben?",
+      "question": "Gegeben ist: punkte = 5, danach punkte = 8, danach print(punkte). Was erscheint?",
+      "options": ["5", "8", "punkte"],
+      "correct": 1,
+      "explanation": "Richtig. Die zweite Zuweisung ersetzt den vorherigen Wert. print(punkte) verwendet deshalb 8."
+    },
+    {
       "id": "code-task",
       "type": "code",
       "eyebrow": "Jetzt du",
-      "title": "Gib eine Variable aus",
-      "task": "Die Variable name ist bereits angelegt. Gib ihren Inhalt mit print() aus.",
-      "starter_code": "name = \"PyLab\"\n\n# Schreibe deine Lösung unter diese Zeile\n",
-      "expected_output": "PyLab",
-      "xp": 50,
+      "title": "Variable anlegen und ausgeben",
+      "task": "Lege eine Variable sprache mit dem Text Python an. Gib die Variable anschließend mit print() aus. Die Ausgabe soll exakt Python lauten.",
+      "starter_code": "# 1. Lege die Variable sprache an\n# 2. Gib sie anschließend aus\n",
+      "expected_output": "Python",
+      "xp": 60,
       "hints": [
-        "Du musst die Variable nicht neu erstellen.",
-        "print() kann direkt einen Variablennamen erhalten.",
-        "Die Lösung besteht aus einer einzigen print(...)-Zeile."
+        "Für Text brauchst du Anführungszeichen.",
+        "Die Zuweisung beginnt mit sprache = ...",
+        "Danach kannst du print(sprache) verwenden."
       ]
     },
     {
       "id": "summary",
       "type": "summary",
-      "eyebrow": "Geschafft",
-      "title": "Das hast du gelernt",
+      "eyebrow": "Zusammenfassung",
+      "title": "Das solltest du jetzt wirklich verstanden haben",
       "items": [
-        "Python führt Anweisungen Schritt für Schritt aus.",
-        "print() gibt Werte in der Konsole aus.",
-        "= ist der Zuweisungsoperator.",
-        "Variablen speichern Werte unter einem Namen.",
-        "Du kannst eine Variable selbst ausgeben."
+        "Python ist eine Programmiersprache mit festen Syntaxregeln.",
+        "Einfache Programme werden grundsätzlich von oben nach unten abgearbeitet.",
+        "print() ist eine eingebaute Funktion für Ausgaben.",
+        "Textwerte werden als Strings behandelt und meist in Anführungszeichen geschrieben.",
+        "Eine Variable ist ein Name, der auf einen Wert verweist.",
+        "= heißt Zuweisungsoperator und weist einen Wert zu.",
+        "Variablen können später neue Werte erhalten.",
+        "Aussagekräftige Variablennamen machen Code leichter verständlich.",
+        "Python unterscheidet Groß- und Kleinschreibung."
       ],
-      "next": "Als Nächstes: Datentypen – str, int, float und bool."
+      "next": "Als Nächstes lernst du die wichtigsten Datentypen str, int, float und bool genauer kennen."
     }
   ]
 }
