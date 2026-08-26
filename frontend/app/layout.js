@@ -3,6 +3,7 @@ import "./path.css";
 import "./mastery.css";
 import "./practice.css";
 import "./visualizer.css";
+import "./features.css";
 
 export const metadata = {
   title: "PyLab",
