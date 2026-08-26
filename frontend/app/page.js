@@ -3,9 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   BookOpen, Brain, Check, ChevronLeft, ChevronRight, Code2, Home,
-  Menu, Play, RotateCcw, Settings, Sparkles, Trophy, Target, Activity,
+  Menu, Play, RotateCcw, Settings, Sparkles, Trophy, Target,
   CalendarClock, Eye, Lightbulb, Layers3
 } from "lucide-react";
+import ActivePractice from "./ActivePractice";
 
 const API = "/backend-api";
 const nav = [
@@ -147,6 +148,8 @@ export default function HomePage() {
         <div className="mastery-dashboard"><div className="metric"><Target/><span>Mastery</span><strong>{profile.average_mastery||0}%</strong></div><div className="metric"><CalendarClock/><span>Fällige Wiederholungen</span><strong>{profile.due_reviews?.length||0}</strong></div><div className="metric"><Layers3/><span>Lektionen</span><strong>{lessons.length}</strong></div></div>
         <div className="path-list">{lessons.map((item,index)=>{const saved=lessonProgress(item.id);const mastery=lessonMastery(item.id);const completed=Boolean(saved?.completed);const active=index===lessonIndex;return <button className={`path-card ${completed?"completed":""} ${active?"current":""}`} key={item.id} onClick={()=>openLesson(index)}><div className="path-number">{completed?<Check size={20}/>:index+1}</div><div className="path-info"><span>{completed?"Abgeschlossen":active?"Aktuell":"Lektion"}</span><h2>{item.title}</h2><p>{item.subtitle}</p><div className="mastery-line"><div><i style={{width:`${mastery.score}%`}}/></div><small>{masteryLabel(mastery.score)} · {mastery.score}%</small></div></div><div className="path-meta">≈ {item.estimated_minutes} Min. <ChevronRight size={18}/></div></button>})}</div>
       </section>
+
+      : activeNav==="Übungen" ? <ActivePractice lessons={lessons} refreshProfile={refreshProfile}/>
 
       : activeNav==="Wiederholen" ? <section className="review-page"><div className="path-heading"><span className="eyebrow">Spaced Repetition</span><h1>Wiederholen, bevor du es vergisst</h1><p>PyLab priorisiert automatisch Themen, die wieder gefestigt werden sollten.</p></div>{profile.due_reviews?.length ? <div className="review-list">{profile.due_reviews.map(review=>{const l=lessons.find(x=>x.id===review.lesson_id);return <button key={review.lesson_id} className="review-card" onClick={()=>openReview(review)}><RotateCcw/><div><strong>{l?.title||review.lesson_id}</strong><span>{masteryLabel(review.score)} · {review.score}% Mastery</span></div><ChevronRight/></button>})}</div> : <div className="review-empty"><Trophy/><h2>Aktuell nichts fällig</h2><p>Sobald ein Thema wiederholt werden sollte, erscheint es automatisch hier.</p></div>}</section>
 
