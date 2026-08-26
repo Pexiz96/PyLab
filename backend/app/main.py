@@ -4,10 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from .database import init_db, get_total_xp, add_xp, save_progress, get_progress
-from .content import load_lessons, get_lesson
+from .content import load_lessons, get_lesson, content_status
 from .runner import run_python
 
-app = FastAPI(title="PyLab API", version="0.2.3")
+app = FastAPI(title="PyLab API", version="0.3.0")
 
 DEFAULT_ORIGINS = [
     "http://localhost:3000",
@@ -57,14 +57,19 @@ def root():
     return {
         "app": "PyLab API",
         "status": "ok",
-        "version": "0.2.3",
+        "version": "0.3.0",
         "health": "/health",
+        "content_status": "/content-status",
         "docs": "/docs",
     }
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "app": "PyLab", "version": "0.2.3"}
+    return {"status": "ok", "app": "PyLab", "version": "0.3.0"}
+
+@app.get("/content-status")
+def lesson_content_status():
+    return content_status()
 
 @app.get("/lessons")
 def lessons():
