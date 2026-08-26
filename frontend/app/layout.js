@@ -5,6 +5,7 @@ import "./practice.css";
 import "./visualizer.css";
 import "./features.css";
 import "./quality.css";
+import PreferenceBootstrap from "./PreferenceBootstrap";
 
 export const metadata = {
   title: "PyLab",
@@ -14,7 +15,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="de">
-      <body>{children}</body>
+      <body><PreferenceBootstrap/>{children}</body>
     </html>
   );
 }
