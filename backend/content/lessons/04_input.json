@@ -16,7 +16,7 @@
         "Der Rückgabewert von input() kann anschließend in einer Variable gespeichert und später weiterverarbeitet werden.",
         "Damit werden Programme interaktiv: Sie reagieren auf Informationen, die erst während der Ausführung eingegeben werden."
       ],
-      "code": "name = input(\"Wie heißt du? \ ")\nprint(name)",
+      "code": "name = input(\"Wie heißt du? \" )\nprint(name)",
       "term": {
         "symbol": "input()",
         "name": "eingebaute Funktion",
@@ -33,7 +33,7 @@
         "Ein guter Prompt macht klar, welche Eingabe erwartet wird, zum Beispiel ein Name, ein Alter oder eine Zahl.",
         "Ohne verständliche Aufforderung weiß der Benutzer oft nicht, was er eingeben soll. Benutzerführung gehört deshalb ebenfalls zu gutem Programmcode."
       ],
-      "code": "stadt = input(\"In welcher Stadt wohnst du? \ ")\nprint(\"Du wohnst in:\", stadt)"
+      "code": "stadt = input(\"In welcher Stadt wohnst du? \" )\nprint(\"Du wohnst in:\", stadt)"
     },
     {
       "id": "always-string",
@@ -46,10 +46,10 @@
         "Deshalb ist es deine Aufgabe als Entwickler, den Wert bei Bedarf in einen anderen Datentyp umzuwandeln.",
         "Mit type() kannst du dir dieses Verhalten sichtbar machen."
       ],
-      "code": "eingabe = input(\"Gib eine Zahl ein: \ ")\nprint(type(eingabe))",
+      "code": "eingabe = input(\"Gib eine Zahl ein: \" )\nprint(type(eingabe))",
       "callout": {
         "title": "Merksatz",
-        "text": "input() → immer str, solange du den Wert nicht selbst umwandelst."
+        "text": "input() liefert immer str, solange du den Wert nicht selbst umwandelst."
       }
     },
     {
@@ -73,7 +73,7 @@
         "Du kannst input() und int() direkt verschachteln. Python führt dabei zuerst die innere Funktion input() und danach int() aus.",
         "Das Ergebnis kann anschließend in einer Variable gespeichert werden."
       ],
-      "code": "alter = int(input(\"Wie alt bist du? \ "))\nprint(alter + 1)",
+      "code": "alter = int(input(\"Wie alt bist du? \"))\nprint(alter + 1)",
       "term": {
         "symbol": "int()",
         "name": "Typumwandlung",
@@ -91,7 +91,7 @@
         "In Python wird ein Punkt als Dezimaltrennzeichen verwendet. Die Eingabe 19.99 lässt sich direkt mit float() umwandeln.",
         "Bei Benutzereingaben musst du später auch berücksichtigen, dass Menschen ungültige Werte eingeben können. Das behandeln wir später mit Fehlerbehandlung."
       ],
-      "code": "preis = float(input(\"Preis: \ "))\nprint(preis)"
+      "code": "preis = float(input(\"Preis: \"))\nprint(preis)"
     },
     {
       "id": "wrong-operation",
@@ -116,7 +116,11 @@
       "eyebrow": "Verständnis prüfen",
       "title": "Welche Zeile kann mit einem eingegebenen Alter rechnen?",
       "question": "Welche Schreibweise liefert eine ganze Zahl?",
-      "options": ["alter = input(\"Alter: \ ")", "alter = int(input(\"Alter: \ "))", "alter = str(input(\"Alter: \ "))"],
+      "options": [
+        "alter = input(\"Alter: \" )",
+        "alter = int(input(\"Alter: \"))",
+        "alter = str(input(\"Alter: \"))"
+      ],
       "correct": 1,
       "explanation": "Richtig. input() liefert den String und int() wandelt ihn anschließend in eine ganze Zahl um."
     },
@@ -130,7 +134,7 @@
         "Wichtig ist, dass du für jeden Wert bewusst entscheidest, welcher Datentyp benötigt wird.",
         "Ein Name bleibt beispielsweise ein String, während ein Alter meist als int gebraucht wird."
       ],
-      "code": "name = input(\"Name: \ ")\nalter = int(input(\"Alter: \ "))\nprint(name)\nprint(alter + 1)"
+      "code": "name = input(\"Name: \" )\nalter = int(input(\"Alter: \"))\nprint(name)\nprint(alter + 1)"
     },
     {
       "id": "code",
