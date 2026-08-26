@@ -7,6 +7,9 @@ import {
   CalendarClock, Eye, Lightbulb, Layers3
 } from "lucide-react";
 import ActivePractice from "./ActivePractice";
+import AchievementsPanel from "./AchievementsPanel";
+import MentorPanel from "./MentorPanel";
+import SettingsPanel from "./SettingsPanel";
 
 const API = "/backend-api";
 const nav = [
@@ -46,6 +49,8 @@ export default function HomePage() {
   }
 
   useEffect(() => {
+    const storedVisual = window.localStorage.getItem("pylab-visual-mode");
+    if (storedVisual !== null) setVisualMode(storedVisual === "true");
     async function load() {
       try {
         const [lessonRes, profileRes] = await Promise.all([
@@ -71,6 +76,8 @@ export default function HomePage() {
     }
     load();
   }, []);
+
+  useEffect(()=>{ if (typeof window !== "undefined") window.localStorage.setItem("pylab-visual-mode", String(visualMode)); },[visualMode]);
 
   const lesson = lessons[lessonIndex] || null;
   const step = lesson?.steps?.[stepIndex] || null;
@@ -137,7 +144,7 @@ export default function HomePage() {
       <div className="brand-row"><div className="brand-mark"><Sparkles size={19}/></div>{!collapsed&&<div><div className="brand">PyLab</div><div className="brand-sub">Python Learning Lab</div></div>}</div>
       <button className="collapse-btn" onClick={()=>setCollapsed(v=>!v)}><Menu size={18}/>{!collapsed&&<span>Menü einklappen</span>}</button>
       <nav>{nav.map(([name,Icon])=><button key={name} className={`nav-item ${activeNav===name?"active":""}`} onClick={()=>setActiveNav(name)} title={name}><Icon size={19}/>{!collapsed&&<span>{name}</span>}</button>)}</nav>
-      <div className="sidebar-bottom"><button className="nav-item"><Settings size={19}/>{!collapsed&&<span>Einstellungen</span>}</button></div>
+      <div className="sidebar-bottom"><button className={`nav-item ${activeNav==="Einstellungen"?"active":""}`} onClick={()=>setActiveNav("Einstellungen")}><Settings size={19}/>{!collapsed&&<span>Einstellungen</span>}</button></div>
     </aside>
 
     <main className="main">
@@ -153,13 +160,17 @@ export default function HomePage() {
 
       : activeNav==="Wiederholen" ? <section className="review-page"><div className="path-heading"><span className="eyebrow">Spaced Repetition</span><h1>Wiederholen, bevor du es vergisst</h1><p>PyLab priorisiert automatisch Themen, die wieder gefestigt werden sollten.</p></div>{profile.due_reviews?.length ? <div className="review-list">{profile.due_reviews.map(review=>{const l=lessons.find(x=>x.id===review.lesson_id);return <button key={review.lesson_id} className="review-card" onClick={()=>openReview(review)}><RotateCcw/><div><strong>{l?.title||review.lesson_id}</strong><span>{masteryLabel(review.score)} · {review.score}% Mastery</span></div><ChevronRight/></button>})}</div> : <div className="review-empty"><Trophy/><h2>Aktuell nichts fällig</h2><p>Sobald ein Thema wiederholt werden sollte, erscheint es automatisch hier.</p></div>}</section>
 
-      : activeNav!=="Heute lernen" ? <section className="placeholder"><h1>{activeNav}</h1><p>Dieser Bereich wird als nächstes mit weiteren intelligenten Lernfunktionen ausgebaut.</p><button className="primary" onClick={()=>setActiveNav("Heute lernen")}>Weiterlernen</button></section>
+      : activeNav==="Achievements" ? <AchievementsPanel profile={profile} lessons={lessons}/>
+
+      : activeNav==="Lernmentor" ? <MentorPanel lesson={lesson} step={step}/>
+
+      : activeNav==="Einstellungen" ? <SettingsPanel visualMode={visualMode} setVisualMode={setVisualMode}/>
 
       : <div className="lesson-layout"><section className="lesson-card">{finishMessage&&<div className="finish-banner">{finishMessage}</div>}
         <div className="lesson-header"><div><span className="eyebrow">{step.eyebrow}</span><h1>{step.title}</h1></div><span className="counter">{stepIndex+1} / {lesson.steps.length}</span></div>
         <div className="progress-track"><div className="progress-fill" style={{width:`${progressPercent}%`}}/></div>
         <div className="lesson-content">
-          {step.type==="lesson"&&<>{step.body?.map((p,i)=><p key={i}>{p}</p>)}{step.code&&<><pre className="code-block"><code>{step.code}</code></pre>{visualMode&&<div className="visual-explain"><div className="visual-title"><Eye size={17}/> So liest Python das</div>{step.code.split("\n").filter(Boolean).slice(0,5).map((line,i)=><div className="visual-row" key={i}><span>{i+1}</span><code>{line}</code><ChevronRight size={15}/><em>{line.includes("=")?"Wert wird gespeichert oder verändert":line.includes("print")?"Wert wird ausgegeben":line.includes("if ")?"Bedingung wird geprüft":line.includes("for ")||line.includes("while ")?"Wiederholung wird gesteuert":"Python führt diese Anweisung aus"}</em></div>)}</div>}</>}{step.term&&<div className="term-card"><div className="term-symbol">{step.term.symbol}</div><div><strong>{step.term.name}</strong><p>{step.term.meaning}</p></div></div>}{step.callout&&<div className="callout"><strong>{step.callout.title}</strong><p>{step.callout.text}</p></div>}</>}
+          {step.type==="lesson"&&<>{step.body?.map((p,i)=><p key={i}>{p}</p>)}{step.code&&<><pre className="code-block"><code>{step.code}</code></pre>{visualMode&&<div className="visual-explain"><div className="visual-title"><Eye size={17}/> So liest Python das</div>{step.code.split("\n").filter(Boolean).slice(0,5).map((line,i)=><div className="visual-row" key={i}><span>{i+1}</span><code>{line}</code><ChevronRight size={15}/><em>{line.includes("=")?"Wert wird gespeichert oder verändert":line.includes("print")?"Wert wird ausgegeben":line.includes("if ")?"Bedingung wird geprüft":line.includes("for ")||line.includes("while ")?"Wiederholung wird gesteuert":line.includes("return")?"Ein Wert wird zurückgegeben":line.includes("def ")?"Eine Funktion wird definiert":"Python führt diese Anweisung aus"}</em></div>)}</div>}</>}{step.term&&<div className="term-card"><div className="term-symbol">{step.term.symbol}</div><div><strong>{step.term.name}</strong><p>{step.term.meaning}</p></div></div>}{step.callout&&<div className="callout"><strong>{step.callout.title}</strong><p>{step.callout.text}</p></div>}</>}
           {step.type==="quiz"&&<div><p className="question">{step.question}</p><div className="options">{step.options.map((option,idx)=><button key={`${idx}-${option}`} className={`option ${selected===idx?"selected":""} ${quizChecked&&idx===step.correct?"correct":""} ${quizChecked&&selected===idx&&idx!==step.correct?"wrong":""}`} onClick={()=>!quizChecked&&setSelected(idx)}><span>{String.fromCharCode(65+idx)}</span><code>{option}</code></button>)}</div>{!quizChecked?<button className="secondary" disabled={selected===null} onClick={checkQuiz}>Antwort prüfen</button>:<div className={`feedback ${selected===step.correct?"success":"error"}`}>{selected===step.correct?step.explanation:"Noch nicht ganz. Schau dir die Erklärung noch einmal an."}</div>}</div>}
           {step.type==="code"&&<div><p className="question">{step.task}</p><div className="editor-shell"><div className="editor-toolbar"><span>main.py</span><button onClick={runCode}><Play size={15}/> Ausführen</button></div><textarea className="editor" value={code} onChange={e=>setCode(e.target.value)} spellCheck={false}/></div><div className="console"><div className="console-title">Ausgabe</div><pre>{output||"Deine Ausgabe erscheint hier."}</pre></div><div className="actions"><button className="ghost" onClick={()=>setHintIndex(i=>Math.min(i+1,step.hints?.length||0))}><Lightbulb size={16}/> Hinweis</button><button className="primary" onClick={checkCode}>Lösung prüfen</button></div>{hintIndex>0&&<div className="hint"><strong>Hinweis {hintIndex}</strong><p>{step.hints[hintIndex-1]}</p></div>}{checkState&&<div className={`feedback ${checkState}`}>{checkState==="success"?`Richtig! +${step.xp||40} XP · Mastery aktualisiert`:"Noch nicht richtig. Der Versuch fließt in deinen Lernstand ein."}</div>}</div>}
           {step.type==="summary"&&<div className="summary"><div className="summary-icon"><Trophy/></div><ul>{step.items.map(item=><li key={item}>{item}</li>)}</ul><div className="next-topic">{step.next}</div></div>}
