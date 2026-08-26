@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS progress (
 CREATE TABLE IF NOT EXISTS xp_events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     amount INTEGER NOT NULL,
-    reason TEXT NOT NULL UNIQUE,
+    reason TEXT NOT NULL,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -35,6 +35,26 @@ CREATE TABLE IF NOT EXISTS mastery (
 """
 
 
+def _migrate(con: sqlite3.Connection) -> None:
+    # Alte Datenbanken können bereits ohne UNIQUE-Constraint existieren.
+    # Falls es durch frühere parallele Requests Duplikate gab, behalten wir
+    # pro reason nur den ältesten XP-Eintrag, bevor der Index angelegt wird.
+    con.execute(
+        """
+        DELETE FROM xp_events
+        WHERE id NOT IN (
+            SELECT MIN(id) FROM xp_events GROUP BY reason
+        )
+        """
+    )
+    con.execute(
+        "CREATE UNIQUE INDEX IF NOT EXISTS idx_xp_events_reason ON xp_events(reason)"
+    )
+    con.execute(
+        "CREATE INDEX IF NOT EXISTS idx_mastery_next_review ON mastery(next_review_at)"
+    )
+
+
 def connect():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(DB_PATH, timeout=10)
@@ -42,6 +62,7 @@ def connect():
     con.execute("PRAGMA busy_timeout = 10000")
     con.execute("PRAGMA journal_mode = WAL")
     con.executescript(SCHEMA)
+    _migrate(con)
     return con
 
 
@@ -75,11 +96,7 @@ def save_progress(lesson_id: str, step_index: int, completed: bool):
             INSERT INTO progress(lesson_id, step_index, completed, updated_at)
             VALUES (?, ?, ?, CURRENT_TIMESTAMP)
             ON CONFLICT(lesson_id) DO UPDATE SET
-                step_index = CASE
-                    WHEN progress.completed = 1 AND excluded.completed = 0
-                        THEN progress.step_index
-                    ELSE excluded.step_index
-                END,
+                step_index = MAX(progress.step_index, excluded.step_index),
                 completed = CASE
                     WHEN progress.completed = 1 OR excluded.completed = 1 THEN 1
                     ELSE 0
