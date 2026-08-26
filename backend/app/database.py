@@ -37,12 +37,13 @@ def connect():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(DB_PATH)
     con.row_factory = sqlite3.Row
+    con.executescript(SCHEMA)
     return con
 
 
 def init_db():
-    with connect() as con:
-        con.executescript(SCHEMA)
+    with connect():
+        pass
 
 
 def get_total_xp() -> int:
