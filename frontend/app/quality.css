@@ -33,6 +33,11 @@ button:not(:disabled):active{transform:translateY(1px)}
 
 .feedback{overflow-wrap:anywhere}.console pre,.code-block{tab-size:4}
 
+/* Erklärungstiefe: nur Lerntext-Absätze werden reduziert, Aufgaben bleiben vollständig sichtbar. */
+html[data-detail-level="compact"] .lesson-content>p:nth-of-type(n+3){display:none}
+html[data-detail-level="balanced"] .lesson-content>p:nth-of-type(n+5){display:none}
+html[data-detail-level="deep"] .lesson-content>p{display:block}
+
 @media(max-width:760px){
   .app-notice{width:calc(100% - 24px);margin-top:12px}
   .actions,.lesson-footer,.practice-actions{gap:10px}
