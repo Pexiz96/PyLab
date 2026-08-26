@@ -3,6 +3,57 @@
 import { useMemo, useState } from "react";
 import { Brain, HelpCircle, Lightbulb, MessageCircleQuestion, Send, ShieldAlert } from "lucide-react";
 
+const TERMS = {
+  def: {
+    aliases:["def","funktion definieren","funktion erstellen"],
+    what:"`def` ist das Python-Schlüsselwort, mit dem du eine Funktion definierst. Hinter `def` stehen der Funktionsname und runde Klammern. Beispiel:\n\ndef begruessen():\n    print(\"Hallo\")",
+    when:"Du brauchst `def`, wenn du einen Ablauf als eigene Funktion zusammenfassen möchtest – besonders wenn du denselben Code mehrfach brauchst, ihn übersichtlicher machen oder Werte über Parameter verarbeiten willst.",
+    example:"Beispiel für `def`:\n\ndef addiere(a, b):\n    return a + b\n\nergebnis = addiere(2, 3)\nprint(ergebnis)\n\n`def addiere(a, b):` erstellt die Funktion. Erst `addiere(2, 3)` führt sie aus.",
+  },
+  return: {
+    aliases:["return","zurückgeben","zurueckgeben"],
+    what:"`return` gibt einen Wert aus einer Funktion an die Stelle zurück, an der die Funktion aufgerufen wurde. Dadurch kannst du mit dem Ergebnis weiterarbeiten.",
+    when:"Du brauchst `return`, wenn eine Funktion ein Ergebnis liefern soll, das später gespeichert, verglichen oder weiterberechnet wird. Nur etwas auf dem Bildschirm zu zeigen ist dagegen die Aufgabe von `print()`.",
+    example:"def verdopple(zahl):\n    return zahl * 2\n\nergebnis = verdopple(4)\n\nDanach enthält `ergebnis` den Wert 8.",
+  },
+  range: {
+    aliases:["range","range()"],
+    what:"`range()` erzeugt eine Zahlenfolge, die sehr häufig in `for`-Schleifen benutzt wird. `range(1, 4)` liefert 1, 2 und 3; der Endwert 4 ist nicht mehr enthalten.",
+    when:"Du brauchst `range()`, wenn eine Schleife eine bestimmte Anzahl von Durchläufen oder einen bestimmten Zahlenbereich durchlaufen soll.",
+    example:"for zahl in range(1, 4):\n    print(zahl)\n\nAusgabe: 1, 2 und 3 jeweils in einer neuen Zeile.",
+  },
+  modulo: {
+    aliases:["modulo","%","prozent operator"],
+    what:"`%` ist der Modulo-Operator. Er liefert den Rest einer Division. `7 % 2` ergibt 1.",
+    when:"Modulo brauchst du zum Beispiel, um gerade und ungerade Zahlen zu erkennen, wiederkehrende Muster zu bauen oder zu prüfen, ob eine Zahl ohne Rest teilbar ist.",
+    example:"zahl = 8\nif zahl % 2 == 0:\n    print(\"gerade\")",
+  },
+  int: {
+    aliases:["int","int()","integer"],
+    what:"`int()` wandelt einen passenden Wert in eine Ganzzahl um. `int(\"5\")` ergibt die Zahl 5.",
+    when:"Du brauchst `int()` häufig nach `input()`, weil `input()` immer Text zurückgibt. Wenn du mit der Eingabe rechnen willst, musst du den Text zuerst in eine Zahl umwandeln.",
+    example:"alter = int(input(\"Alter: \"))\nprint(alter + 1)",
+  },
+  input: {
+    aliases:["input","input()","eingabe"],
+    what:"`input()` wartet auf eine Eingabe des Nutzers und gibt diese immer als String, also Text, zurück.",
+    when:"Du brauchst `input()`, wenn dein Programm während der Ausführung Daten vom Nutzer entgegennehmen soll.",
+    example:"name = input(\"Wie heißt du? \" )\nprint(\"Hallo\", name)",
+  },
+  self: {
+    aliases:["self"],
+    what:"`self` bezeichnet innerhalb einer Klasse das konkrete Objekt, mit dem gerade gearbeitet wird. `self.name` ist zum Beispiel das Attribut `name` genau dieses Objekts.",
+    when:"Du brauchst `self` in Instanzmethoden einer Klasse, wenn du auf Attribute oder andere Methoden des aktuellen Objekts zugreifen möchtest.",
+    example:"class Person:\n    def __init__(self, name):\n        self.name = name",
+  },
+  list: {
+    aliases:["liste","list","list()"],
+    what:"Eine Liste speichert mehrere Werte in einer festen Reihenfolge. Listen sind veränderbar und beginnen beim Index 0.",
+    when:"Eine Liste ist sinnvoll, wenn du mehrere zusammengehörige Werte speichern und später hinzufügen, entfernen oder einzeln über ihren Index ansprechen möchtest.",
+    example:"namen = [\"Ana\", \"Ben\"]\nnamen.append(\"Mia\")\nprint(namen[0])",
+  },
+};
+
 function stepText(lesson, step) {
   const body = Array.isArray(step?.body) ? step.body.join(" ") : "";
   return `${lesson?.title || ""} ${lesson?.subtitle || ""} ${step?.title || ""} ${body} ${step?.question || ""} ${step?.task || ""} ${step?.code || ""}`.toLowerCase();
@@ -11,7 +62,6 @@ function stepText(lesson, step) {
 function quickAnswer(action, lesson, step) {
   const body = Array.isArray(step?.body) ? step.body : [];
   const first = body[0] || step?.question || step?.task || lesson?.subtitle || "Schau dir den aktuellen Schritt noch einmal genau an.";
-
   if (action === "simple") return `Ganz einfach: ${first}`;
   if (action === "why") return step?.term?.meaning || step?.callout?.text || "Dieses Thema ist ein Baustein für spätere Python-Aufgaben. Wichtig ist nicht nur die Syntax, sondern zu verstehen, wann und warum du sie einsetzt.";
   if (action === "mistake") {
@@ -26,41 +76,70 @@ function quickAnswer(action, lesson, step) {
   return first;
 }
 
+function detectTerm(q) {
+  return Object.entries(TERMS).find(([,data]) => data.aliases.some(alias => q.includes(alias)))?.[0] || null;
+}
+
+function detectIntent(q) {
+  if (/wann|wofür|wofuer|wann brauche|wo brauche|wozu/.test(q)) return "when";
+  if (/beispiel|zeig.*beispiel|wie sieht.*aus|wie benutze|wie verwende/.test(q)) return "example";
+  if (/unterschied|unterscheidet|versus| vs |statt/.test(q)) return "difference";
+  if (/warum/.test(q)) return "why";
+  if (/was ist|was bedeutet|bedeutet|erklär.*was|erklaer.*was/.test(q)) return "what";
+  if (/fehler|falsch|funktioniert nicht|klappt nicht/.test(q)) return "mistake";
+  if (/einfach|leichter|versteh.*nicht|nicht verstanden/.test(q)) return "simple";
+  if (/test|frag mich|abfragen|prüf mich|pruef mich/.test(q)) return "test";
+  if (/hinweis|tipp/.test(q)) return "hint";
+  return "general";
+}
+
+function termReply(termKey, intent, q) {
+  const term = TERMS[termKey];
+  if (!term) return null;
+  if (intent === "what") return term.what;
+  if (intent === "when" || intent === "why") return term.when;
+  if (intent === "example") return term.example;
+
+  if (intent === "difference") {
+    if ((termKey === "return" && q.includes("print")) || (termKey === "def" && q.includes("aufruf"))) {
+      if (termKey === "return") return "`print()` zeigt einen Wert nur in der Ausgabe an. `return` gibt einen Wert aus einer Funktion zurück, sodass dein Programm damit weiterarbeiten kann. Beispiel: `x = verdopple(4)` funktioniert nur sinnvoll, wenn `verdopple()` den Wert mit `return` zurückgibt.";
+      return "`def` erstellt bzw. definiert eine Funktion. Ein Funktionsaufruf führt sie aus. Beispiel: `def hallo(): ...` definiert die Funktion; `hallo()` ruft sie später auf.";
+    }
+    return `${term.what}\n\n${term.when}`;
+  }
+  return term.what;
+}
+
 function contextualReply(question, lesson, step, awaitingTest) {
   const q = question.trim().toLowerCase();
   const context = stepText(lesson, step);
 
   if (awaitingTest) {
     if (context.includes("print") && /erste|zweite|dritte|zeile|ausgabe|1|2|3/.test(q)) {
-      return "Der Kern deiner Antwort passt: Die drei print()-Aufrufe werden nacheinander ausgeführt und geben jeweils ihren Text aus. Wichtig: Bei diesem Beispiel werden keine eigenen Variablen gespeichert. Wenn du möchtest, erkläre zusätzlich, warum die Reihenfolge genau so entsteht.";
+      return "Der Kern deiner Antwort passt: Die drei print()-Aufrufe werden nacheinander ausgeführt und geben jeweils ihren Text aus. Wichtig: Bei diesem Beispiel werden keine eigenen Variablen gespeichert.";
     }
-    return "Ich werte bei freien Antworten zuerst den inhaltlichen Kern. Beschreibe kurz, was Python der Reihe nach macht und welches Ergebnis entsteht. Eine andere Formulierung als meine Musterlösung ist völlig in Ordnung.";
+    return "Ich werte zuerst den inhaltlichen Kern. Beschreibe kurz, was Python der Reihe nach macht und welches Ergebnis entsteht. Eine andere Formulierung als eine Musterlösung ist völlig in Ordnung.";
   }
 
-  if (/was ist|was bedeutet|bedeutet/.test(q)) {
-    if (q.includes("%") || q.includes("modulo")) return "% heißt Modulo-Operator. Er liefert den Rest einer Division. Beispiel: 7 % 2 ergibt 1, weil nach 7 durch 2 der Rest 1 bleibt.";
-    if (q.includes("return")) return "return beendet eine Funktion an dieser Stelle und gibt einen Wert an den Aufrufer zurück. Anders als print() zeigt return den Wert nicht einfach nur an, sondern macht ihn außerhalb der Funktion weiterverwendbar.";
-    if (q.includes("range")) return "range() erzeugt eine Zahlenfolge für Schleifen. Bei range(1, 4) entstehen 1, 2 und 3. Der Endwert 4 gehört nicht mehr dazu.";
-    if (q.includes("self")) return "self bezeichnet innerhalb einer Klasse das konkrete Objekt, mit dem gerade gearbeitet wird. Über self.name greifst du zum Beispiel auf das Attribut name dieses Objekts zu.";
+  const intent = detectIntent(q);
+  const termKey = detectTerm(q);
+  if (termKey) {
+    const reply = termReply(termKey, intent, q);
+    if (reply) return reply;
   }
 
-  if (/warum/.test(q)) {
-    if (q.includes("int") || context.includes("input")) return "input() liefert Text, also einen String. Wenn du mit einer eingegebenen Ganzzahl rechnen möchtest, wandelst du sie mit int() um. Sonst würde Python zum Beispiel Text und Zahl miteinander verrechnen sollen.";
-    if (q.includes("range")) return "range() ist praktisch, weil du damit festlegen kannst, welche Zahlen eine for-Schleife nacheinander durchlaufen soll, ohne jede Zahl selbst aufzuschreiben.";
-    return quickAnswer("why", lesson, step);
-  }
+  if (intent === "mistake") return quickAnswer("mistake", lesson, step);
+  if (intent === "simple") return quickAnswer("simple", lesson, step);
+  if (intent === "test") return quickAnswer("test", lesson, step);
+  if (intent === "hint") return "Hinweis: Löse nicht sofort die ganze Aufgabe. Frage dich zuerst: Welche Werte habe ich? Welches Ergebnis brauche ich? Und welches Python-Werkzeug verbindet beides?";
+  if (intent === "why") return quickAnswer("why", lesson, step);
 
-  if (/fehler|falsch|funktioniert nicht|klappt nicht/.test(q)) return quickAnswer("mistake", lesson, step);
-  if (/einfach|leichter|versteh.*nicht|nicht verstanden/.test(q)) return quickAnswer("simple", lesson, step);
-  if (/test|frag mich|abfragen|prüf mich|pruef mich/.test(q)) return quickAnswer("test", lesson, step);
-  if (/hinweis|tipp/.test(q)) return "Hinweis: Löse nicht sofort die ganze Aufgabe. Frage dich zuerst: Welche Werte habe ich? Welches Ergebnis brauche ich? Und welches Python-Werkzeug verbindet beides?";
+  if (context.includes("schleif") || context.includes("range")) return "Beim aktuellen Thema geht es um Wiederholungen. Frag mich zum Beispiel: „Was ist range()?“, „Wann brauche ich eine for-Schleife?“ oder „Warum endet range(1, 4) bei 3?“";
+  if (context.includes("funktion") || context.includes("return") || context.includes("def ")) return "Beim aktuellen Thema geht es um Funktionen. Du kannst mich konkret nach `def`, Parametern, Argumenten, dem Funktionsaufruf oder `return` fragen.";
+  if (context.includes("liste")) return "Bei Listen kannst du mich zum Beispiel nach Index, `append()`, Veränderbarkeit oder dem Unterschied zu Tupeln fragen.";
+  if (context.includes("if") || context.includes("beding")) return "Bei Bedingungen kannst du mich konkret nach `if`, `elif`, `else`, Vergleichsoperatoren oder True/False fragen.";
 
-  if (context.includes("schleif") || context.includes("range")) return "Beim aktuellen Thema geht es um Wiederholungen. Denk bei einer Schleife immer an drei Fragen: Welche Werte werden durchlaufen? Was passiert pro Durchlauf? Wann endet die Schleife?";
-  if (context.includes("funktion") || context.includes("return")) return "Beim aktuellen Thema geht es um Funktionen. Parameter nehmen Werte entgegen, der Funktionskörper verarbeitet sie und return kann ein Ergebnis zurückgeben. Frag mich gern konkret nach einem dieser Teile.";
-  if (context.includes("liste")) return "Bei Listen sind besonders Index, Veränderbarkeit und Methoden wie append() wichtig. Der erste Index ist immer 0. Stell mir gern eine konkrete Frage zu deinem aktuellen Beispiel.";
-  if (context.includes("if") || context.includes("beding")) return "Bei Bedingungen entscheidet ein Ausdruck mit True oder False, welcher Code ausgeführt wird. Wenn du mir sagst, welche Zeile dir unklar ist, erkläre ich genau diesen Teil.";
-
-  return `Ich beziehe mich auf „${step?.title || lesson?.title || "dein aktuelles Thema"}“. Formuliere deine Frage möglichst konkret, zum Beispiel „Warum brauche ich das?“, „Was macht diese Zeile?“ oder „Warum ist meine Lösung falsch?“.`;
+  return `Ich beziehe mich auf „${step?.title || lesson?.title || "dein aktuelles Thema"}“. Frage möglichst konkret nach einem Begriff oder Zweck, zum Beispiel „Was ist def?“, „Wann brauche ich return?“ oder „Zeig mir ein Beispiel“. `;
 }
 
 export default function MentorPanel({lesson, step}) {
