@@ -1,9 +1,11 @@
+import os
 import sqlite3
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DB_PATH = BASE_DIR / "data" / "pylab.db"
+DEFAULT_DB_PATH = BASE_DIR / "data" / "pylab.db"
+DB_PATH = Path(os.getenv("PYLAB_DB_PATH", str(DEFAULT_DB_PATH))).expanduser()
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS progress (
@@ -16,7 +18,7 @@ CREATE TABLE IF NOT EXISTS progress (
 CREATE TABLE IF NOT EXISTS xp_events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     amount INTEGER NOT NULL,
-    reason TEXT NOT NULL,
+    reason TEXT NOT NULL UNIQUE,
     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -35,8 +37,10 @@ CREATE TABLE IF NOT EXISTS mastery (
 
 def connect():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(DB_PATH)
+    con = sqlite3.connect(DB_PATH, timeout=10)
     con.row_factory = sqlite3.Row
+    con.execute("PRAGMA busy_timeout = 10000")
+    con.execute("PRAGMA journal_mode = WAL")
     con.executescript(SCHEMA)
     return con
 
@@ -55,16 +59,13 @@ def get_total_xp() -> int:
 
 
 def add_xp(amount: int, reason: str):
+    if amount <= 0:
+        return
     with connect() as con:
-        exists = con.execute(
-            "SELECT 1 FROM xp_events WHERE reason = ? LIMIT 1",
-            (reason,),
-        ).fetchone()
-        if not exists:
-            con.execute(
-                "INSERT INTO xp_events(amount, reason) VALUES (?, ?)",
-                (amount, reason),
-            )
+        con.execute(
+            "INSERT OR IGNORE INTO xp_events(amount, reason) VALUES (?, ?)",
+            (amount, reason),
+        )
 
 
 def save_progress(lesson_id: str, step_index: int, completed: bool):
@@ -74,8 +75,15 @@ def save_progress(lesson_id: str, step_index: int, completed: bool):
             INSERT INTO progress(lesson_id, step_index, completed, updated_at)
             VALUES (?, ?, ?, CURRENT_TIMESTAMP)
             ON CONFLICT(lesson_id) DO UPDATE SET
-                step_index = excluded.step_index,
-                completed = excluded.completed,
+                step_index = CASE
+                    WHEN progress.completed = 1 AND excluded.completed = 0
+                        THEN progress.step_index
+                    ELSE excluded.step_index
+                END,
+                completed = CASE
+                    WHEN progress.completed = 1 OR excluded.completed = 1 THEN 1
+                    ELSE 0
+                END,
                 updated_at = CURRENT_TIMESTAMP
             """,
             (lesson_id, step_index, int(completed)),
