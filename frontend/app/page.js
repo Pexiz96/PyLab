@@ -53,7 +53,7 @@ function explainCodeLine(line) {
   if (/^return\b/.test(text)) return "Ein Wert wird aus der Funktion an die Aufrufstelle zurückgegeben.";
   if (/^print\s*\(/.test(text)) return "Ein Wert oder Text wird in der Konsole ausgegeben.";
   if (/^\w+(?:\[[^\]]+\])?\s*(?:=|\+=|-=|\*=|\/=|%=)\s*[^=]/.test(text)) return "Ein Wert wird gespeichert oder verändert.";
-  if (/\b(?:==|!=|>=|<=|>|<)\b/.test(text) || /(?:==|!=|>=|<=|>|<)/.test(text)) return "Hier wird ein Vergleich ausgewertet.";
+  if (/(?:==|!=|>=|<=|>|<)/.test(text)) return "Hier wird ein Vergleich ausgewertet.";
   return "Python verarbeitet diese Anweisung der Reihe nach.";
 }
 
@@ -95,8 +95,10 @@ export default function HomePage() {
     try {
       const data = await apiJson(`${API}/profile`, { cache:"no-store" });
       setProfile(data);
+      return true;
     } catch (error) {
       setNotice(`Lernstand konnte nicht aktualisiert werden: ${error.message}`);
+      return false;
     }
   }
 
@@ -175,7 +177,7 @@ export default function HomePage() {
   }
 
   async function saveProgress(index, completed = false) {
-    if (!lesson) return;
+    if (!lesson) return false;
     try {
       await apiJson(`${API}/progress`, {
         method:"POST",
@@ -183,8 +185,10 @@ export default function HomePage() {
         body:JSON.stringify({lesson_id:lesson.id, step_index:index, completed}),
       });
       await refreshProfile();
+      return true;
     } catch (error) {
       setNotice(`Fortschritt konnte nicht gespeichert werden: ${error.message}`);
+      return false;
     }
   }
 
@@ -221,16 +225,18 @@ export default function HomePage() {
   async function next() {
     if (!lesson?.steps?.length || busy) return;
     setFinishMessage("");
-    if (stepIndex < lesson.steps.length - 1) {
-      const n = stepIndex + 1;
-      setStepIndex(n);
-      await saveProgress(n, false);
-      return;
-    }
-
     setBusy("progress");
     try {
-      await saveProgress(stepIndex, true);
+      if (stepIndex < lesson.steps.length - 1) {
+        const n = stepIndex + 1;
+        const saved = await saveProgress(n, false);
+        if (saved) setStepIndex(n);
+        return;
+      }
+
+      const saved = await saveProgress(stepIndex, true);
+      if (!saved) return;
+
       if (lessonIndex < lessons.length - 1) {
         const n = lessonIndex + 1;
         setLessonIndex(n);
@@ -245,12 +251,10 @@ export default function HomePage() {
     }
   }
 
-  async function goBack() {
+  function goBack() {
     if (stepIndex <= 0 || busy) return;
     setFinishMessage("");
-    const p = stepIndex - 1;
-    setStepIndex(p);
-    await saveProgress(p, false);
+    setStepIndex(stepIndex - 1);
   }
 
   function openLesson(index) {
@@ -321,6 +325,10 @@ export default function HomePage() {
 
   const hints = Array.isArray(step.hints) ? step.hints : [];
   const hasMoreHints = hintIndex < hints.length;
+  const currentProgress = lessonProgress(lesson.id);
+  const furthestUnlockedStep = currentProgress?.completed
+    ? lesson.steps.length - 1
+    : Math.max(stepIndex, currentProgress?.step_index || 0);
 
   return <div className="app-shell">
     <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
@@ -363,10 +371,10 @@ export default function HomePage() {
 
           {step.type === "summary" && <div className="summary"><div className="summary-icon"><Trophy/></div><ul>{step.items.map(item=><li key={item}>{item}</li>)}</ul>{step.next && <div className="next-topic">{step.next}</div>}</div>}
         </div>
-        <footer className="lesson-footer"><button className="ghost" disabled={stepIndex===0||Boolean(busy)} onClick={goBack}><ChevronLeft size={18}/> Zurück</button><button className="primary" disabled={!canContinue} onClick={next}>{stepIndex===lesson.steps.length-1?"Lektion abschließen":"Weiter"}<ChevronRight size={18}/></button></footer>
+        <footer className="lesson-footer"><button className="ghost" disabled={stepIndex===0||Boolean(busy)} onClick={goBack}><ChevronLeft size={18}/> Zurück</button><button className="primary" disabled={!canContinue} onClick={next}>{busy==="progress"?"Speichere …":stepIndex===lesson.steps.length-1?"Lektion abschließen":"Weiter"}<ChevronRight size={18}/></button></footer>
       </section>
 
-      <aside className="course-panel"><span className="eyebrow">Dein Lernstand</span><h2>{lesson.title}</h2><div className="mastery-ring"><strong>{currentMastery.score}%</strong><span>{masteryLabel(currentMastery.score)}</span></div><div className="course-meta"><span>{currentMastery.attempts} Versuche</span><span>Serie {currentMastery.streak}</span><span>≈ {lesson.estimated_minutes} Min.</span></div><button className={`visual-toggle ${visualMode?"on":""}`} onClick={()=>setVisualMode(v=>!v)}><Eye size={16}/> Visuelle Erklärung {visualMode?"an":"aus"}</button><div className="step-list">{lesson.steps.map((s,i)=><button key={s.id} className={`step-row ${i===stepIndex?"current":""} ${i<stepIndex?"done":""}`} onClick={()=>{setFinishMessage("");setStepIndex(i)}}><span className="step-dot">{i<stepIndex?<Check size={13}/>:i+1}</span><span>{s.title}</span></button>)}</div></aside></div>}
+      <aside className="course-panel"><span className="eyebrow">Dein Lernstand</span><h2>{lesson.title}</h2><div className="mastery-ring"><strong>{currentMastery.score}%</strong><span>{masteryLabel(currentMastery.score)}</span></div><div className="course-meta"><span>{currentMastery.attempts} Versuche</span><span>Serie {currentMastery.streak}</span><span>≈ {lesson.estimated_minutes} Min.</span></div><button className={`visual-toggle ${visualMode?"on":""}`} onClick={()=>setVisualMode(v=>!v)}><Eye size={16}/> Visuelle Erklärung {visualMode?"an":"aus"}</button><div className="step-list">{lesson.steps.map((s,i)=>{const locked=i>furthestUnlockedStep;return <button key={s.id} className={`step-row ${i===stepIndex?"current":""} ${i<stepIndex?"done":""} ${locked?"locked":""}`} disabled={locked} title={locked?"Schließe zuerst die vorherigen Schritte ab":s.title} onClick={()=>{if(!locked){setFinishMessage("");setStepIndex(i)}}}><span className="step-dot">{i<stepIndex?<Check size={13}/>:i+1}</span><span>{s.title}</span></button>})}</div></aside></div>}
     </main>
   </div>;
 }
