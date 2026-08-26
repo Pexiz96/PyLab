@@ -124,6 +124,42 @@ def test_empty_code_is_rejected():
     assert response.status_code == 422
 
 
+def test_safe_standard_library_import_still_works():
+    response = client.post("/run", json={"code": 'import json\nprint(json.dumps({"x": 1}))'})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["blocked"] is False
+    assert body["stderr"] == ""
+    assert body["stdout"].strip() == '{"x": 1}'
+
+
+def test_regex_lesson_import_still_works():
+    response = client.post(
+        "/run",
+        json={"code": 'import re\ntext="abc42def"\nprint(re.search(r"\\d+", text).group())'},
+    )
+    assert response.status_code == 200
+    body = response.json()
+    assert body["blocked"] is False
+    assert body["stdout"].strip() == "42"
+
+
+def test_dangerous_import_is_blocked():
+    response = client.post("/run", json={"code": 'import os\nprint(os.listdir("/"))'})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["blocked"] is True
+    assert "nicht freigegeben" in body["stderr"]
+
+
+def test_file_access_is_blocked():
+    response = client.post("/run", json={"code": 'print(open("/etc/passwd").read())'})
+    assert response.status_code == 200
+    body = response.json()
+    assert body["blocked"] is True
+    assert "open()" in body["stderr"]
+
+
 def test_lesson_grading_does_not_trust_expected_output_from_browser():
     lesson, step = first_code_step()
     response = client.post(
