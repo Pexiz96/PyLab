@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Bug, CheckCircle2, ChevronRight, Code2, FileQuestion, PencilLine, Play, RefreshCcw } from "lucide-react";
+import { Bug, CheckCircle2, ChevronRight, Code2, Eye, FileQuestion, PencilLine, Play, RefreshCcw } from "lucide-react";
+import BasicVisualizer from "./BasicVisualizer";
 
 const API = "/backend-api";
 
@@ -29,11 +30,11 @@ export default function ActivePractice({ lessons, refreshProfile }) {
   const [code,setCode] = useState(EXERCISES[0].starter || "");
   const [result,setResult] = useState(null);
   const [consoleText,setConsoleText] = useState("");
+  const [showVisualizer,setShowVisualizer] = useState(false);
   const exercise = EXERCISES[index];
   const lesson = lessons[exercise.lessonIndex];
-  const solved = result?.passed === true;
-
   const completed = useMemo(() => index + 1, [index]);
+  const visualCode = exercise.type === "challenge" ? code : (exercise.code || "");
 
   async function record(passed) {
     if (!lesson) return;
@@ -69,7 +70,7 @@ export default function ActivePractice({ lessons, refreshProfile }) {
 
   function next() {
     const n = (index + 1) % EXERCISES.length;
-    setIndex(n); setSelected(null); setAnswer(""); setResult(null); setConsoleText(""); setCode(EXERCISES[n].starter || "");
+    setIndex(n); setSelected(null); setAnswer(""); setResult(null); setConsoleText(""); setCode(EXERCISES[n].starter || ""); setShowVisualizer(false);
   }
 
   return <section className="practice-page">
@@ -85,6 +86,9 @@ export default function ActivePractice({ lessons, refreshProfile }) {
       {(exercise.type === "predict" || exercise.type === "debug") && <div className="options">{exercise.options.map((o,i)=><button key={o} className={`option ${selected===i?"selected":""}`} disabled={result!==null} onClick={()=>setSelected(i)}><span>{String.fromCharCode(65+i)}</span><code>{o}</code></button>)}</div>}
       {(exercise.type === "fill" || exercise.type === "explain") && <textarea className="practice-answer" value={answer} disabled={result!==null} onChange={e=>setAnswer(e.target.value)} placeholder={exercise.type === "explain" ? "Erkläre den Ablauf in deinen eigenen Worten …" : "Deine Antwort …"}/>} 
       {exercise.type === "challenge" && <><div className="editor-shell"><div className="editor-toolbar"><span>practice.py</span><button onClick={runCode}><Play size={15}/> Ausführen</button></div><textarea className="editor" value={code} onChange={e=>setCode(e.target.value)} spellCheck={false}/></div><div className="console"><div className="console-title">Ausgabe</div><pre>{consoleText || "Deine Ausgabe erscheint hier."}</pre></div></>}
+
+      {visualCode && !visualCode.includes("____") && <div className="practice-viz-toggle"><button className="ghost" onClick={()=>setShowVisualizer(v=>!v)}><Eye size={16}/> {showVisualizer?"Visualizer schließen":"Code Schritt für Schritt"}</button></div>}
+      {showVisualizer && visualCode && !visualCode.includes("____") && <BasicVisualizer code={visualCode}/>} 
 
       {result && <div className={`feedback ${result.passed?"success":"error"}`}><strong>{result.passed?"Richtig – das sitzt.":"Noch nicht sicher."}</strong><p>{exercise.explanation}</p></div>}
       <div className="practice-actions">{!result ? <button className="primary" onClick={check} disabled={(exercise.type==="predict"||exercise.type==="debug")&&selected===null}><CheckCircle2 size={17}/> Prüfen</button> : <button className="primary" onClick={next}>{index===EXERCISES.length-1?<RefreshCcw size={17}/>:<ChevronRight size={17}/>} {index===EXERCISES.length-1?"Neue Runde":"Nächste Aufgabe"}</button>}</div>
