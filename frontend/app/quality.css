@@ -1,0 +1,51 @@
+/* Cross-cutting UX and accessibility fixes. */
+:where(button,a,textarea,input):focus-visible{
+  outline:3px solid rgba(45,212,191,.72);
+  outline-offset:3px;
+}
+
+.app-notice{
+  width:min(980px,calc(100% - 40px));
+  margin:18px auto 0;
+  padding:12px 14px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  border:1px solid rgba(251,113,133,.34);
+  border-radius:13px;
+  background:rgba(251,113,133,.08);
+  color:#ffb1bf;
+}
+.app-notice svg{flex:none}.app-notice span{flex:1}.app-notice button{
+  border:0;background:transparent;color:inherit;font-size:22px;line-height:1;padding:2px 6px;border-radius:8px;
+}
+
+.error-card button{
+  margin-top:20px;border:0;border-radius:12px;padding:11px 17px;font-weight:800;
+  background:linear-gradient(135deg,var(--primary),var(--primary2));color:#04221e;
+}
+
+button{transition:background-color .15s ease,border-color .15s ease,opacity .15s ease,transform .15s ease}
+button:not(:disabled):active{transform:translateY(1px)}
+
+.editor,.practice-answer,.mentor-input-row textarea{caret-color:var(--primary)}
+.editor::selection,.practice-answer::selection,.mentor-input-row textarea::selection{background:rgba(45,212,191,.25)}
+
+.feedback{overflow-wrap:anywhere}.console pre,.code-block{tab-size:4}
+
+@media(max-width:760px){
+  .app-notice{width:calc(100% - 24px);margin-top:12px}
+  .actions,.lesson-footer,.practice-actions{gap:10px}
+  .actions>*{flex:1;justify-content:center}
+  .lesson-footer .primary,.lesson-footer .ghost{min-width:0}
+  .profile-strip{gap:7px}.mastery-mini{display:none}
+}
+
+@media(max-width:480px){
+  .lesson-footer{flex-wrap:wrap}.lesson-footer>*{flex:1;justify-content:center}
+  .actions{flex-direction:column}.actions>*{width:100%;justify-content:center}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+}
