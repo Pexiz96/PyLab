@@ -44,7 +44,9 @@ def test_code_tasks_are_runnable_and_teachable():
 
 
 def test_summaries_are_useful():
-    for lesson in load_lessons():
+    lessons = load_lessons()
+    for index, lesson in enumerate(lessons):
         summary = lesson["steps"][-1]
         assert len(summary.get("items", [])) >= 3, f"{lesson['id']}: Zusammenfassung ist zu knapp"
-        assert str(summary.get("next", "")).strip() or lesson is load_lessons()[-1], f"{lesson['id']}: Ausblick auf das nächste Thema fehlt"
+        if index < len(lessons) - 1:
+            assert str(summary.get("next", "")).strip(), f"{lesson['id']}: Ausblick auf das nächste Thema fehlt"
