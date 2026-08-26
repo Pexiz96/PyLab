@@ -9,35 +9,85 @@ const API = "/backend-api";
 const EXERCISES = [
   {type:"predict",lessonIndex:0,title:"Was kommt raus?",code:'punkte = 5\npunkte = 8\nprint(punkte)',question:"Welche Ausgabe erzeugt der Code?",options:["5","8","punkte"],correct:1,explanation:"Die zweite Zuweisung ersetzt den vorherigen Wert. Deshalb wird 8 ausgegeben."},
   {type:"debug",lessonIndex:0,title:"Fehler finden",code:'print(Hallo)',question:"Warum entsteht hier ein Fehler?",options:["print() darf keinen Text ausgeben","Hallo wird ohne Anführungszeichen als Name interpretiert","Runde Klammern sind verboten"],correct:1,explanation:"Ohne Anführungszeichen sucht Python nach einer Variable namens Hallo."},
-  {type:"predict",lessonIndex:1,title:"Datentyp verstehen",code:'zahl = "5"\nprint(zahl + zahl)',question:"Was wird ausgegeben?",options:["10","55","Fehler"],correct:1,explanation:"\"5\" ist ein String. Zwei Strings werden mit + aneinandergehängt."},
+  {type:"predict",lessonIndex:1,title:"Datentyp verstehen",code:'zahl = "5"\nprint(zahl + zahl)',question:"Was wird ausgegeben?",options:["10","55","Fehler"],correct:1,explanation:'"5" ist ein String. Zwei Strings werden mit + aneinandergehängt.'},
   {type:"fill",lessonIndex:2,title:"Modulo einsetzen",code:'rest = 7 __ 2\nprint(rest)',question:"Welcher Operator gehört in die Lücke, damit 1 ausgegeben wird?",answers:["%"],explanation:"% ist der Modulo-Operator. Er liefert den Rest einer Division."},
   {type:"debug",lessonIndex:3,title:"Typfehler erkennen",code:'alter = input("Alter: ")\nprint(alter + 1)',question:"Was muss geändert werden, damit gerechnet werden kann?",options:["input() durch print() ersetzen","alter vor der Addition mit int() umwandeln","Die 1 in Anführungszeichen setzen"],correct:1,explanation:"input() liefert immer einen String. Für eine Ganzzahlrechnung brauchst du int()."},
+  {
+    type:"explain",lessonIndex:3,title:"input() erklären",code:'alter = input("Alter: ")\nalter = int(alter)',question:"Erkläre kurz, warum int() hier gebraucht wird.",
+    concepts:[
+      {label:"input liefert Text",required:true,variants:["input liefert string","input gibt string","input liefert text","input gibt text","eingabe ist string","eingabe ist text"]},
+      {label:"für eine Zahl umwandeln",required:true,variants:["int wandelt","in zahl umwandeln","in ganzzahl umwandeln","damit gerechnet","zum rechnen","zahl machen"]}
+    ],
+    explanation:"Der Kern ist: input() liefert Text. int() wandelt diesen Text in eine Ganzzahl um, damit damit gerechnet werden kann."
+  },
   {type:"predict",lessonIndex:4,title:"Bedingung lesen",code:'alter = 20\nif alter >= 18:\n    print("Ja")\nelse:\n    print("Nein")',question:"Welche Ausgabe erscheint?",options:["Ja","Nein","20"],correct:0,explanation:"20 ist größer oder gleich 18, deshalb wird der if-Zweig ausgeführt."},
   {
-    type:"explain",lessonIndex:5,title:"Schleife erklären",code:'for zahl in range(1, 4):\n    print(zahl)',question:"Erkläre in eigenen Worten, was die Schleife macht.",
-    conceptGroups:[
-      ["print", "ausgib", "ausgabe", "zeigt"],
-      ["1-3", "1 - 3", "1 bis 3", "1,2,3", "1, 2, 3", "1 2 3", "zahlen 1 bis 3", "werte 1 bis 3"]
+    type:"explain",lessonIndex:4,title:"if-Bedingung erklären",code:'alter = 20\nif alter >= 18:\n    print("Ja")\nelse:\n    print("Nein")',question:"Erkläre in eigenen Worten, warum Ja ausgegeben wird.",
+    concepts:[
+      {label:"20 erfüllt die Bedingung",required:true,variants:["20 ist größer", "20 ist groesser", "20 >= 18", "20 ist mindestens 18", "alter ist größer", "alter ist groesser", "bedingung ist wahr", "bedingung stimmt"]},
+      {label:"if-Zweig wird ausgeführt",required:false,variants:["if wird ausgeführt", "if wird ausgefuehrt", "if zweig", "deshalb ja", "ja ausgegeben", "print ja"]}
     ],
-    explanation:"Richtig ist der Kern: Die Schleife gibt die Zahlen 1 bis 3 aus. Noch präziser: range(1, 4) liefert nacheinander 1, 2 und 3; 4 selbst ist nicht mehr enthalten."
+    explanation:"Richtig: 20 erfüllt die Bedingung alter >= 18. Deshalb läuft der if-Zweig und Ja wird ausgegeben."
+  },
+  {
+    type:"explain",lessonIndex:5,title:"Schleife erklären",code:'for zahl in range(1, 4):\n    print(zahl)',question:"Erkläre in eigenen Worten, was die Schleife macht.",
+    concepts:[
+      {label:"gibt Zahlen aus",required:true,variants:["print", "ausgib", "ausgabe", "zeigt", "schreibt"]},
+      {label:"Zahlen 1 bis 3",required:true,variants:["1-3", "1 - 3", "1 bis 3", "1,2,3", "1, 2, 3", "1 2 3", "zahlen 1 bis 3", "werte 1 bis 3"]},
+      {label:"4 ist nicht enthalten",required:false,variants:["4 nicht", "4 wird nicht", "bis 4 aber", "4 ausgeschlossen", "4 ist nicht dabei"]}
+    ],
+    explanation:"Der Kern stimmt, wenn du erkennst, dass die Schleife 1, 2 und 3 ausgibt. Präziser: range(1, 4) endet vor der 4."
   },
   {type:"fill",lessonIndex:5,title:"Schleife vervollständigen",code:'for zahl in ____(3):\n    print(zahl)',question:"Welche Funktion gehört in die Lücke?",answers:["range","range()"],explanation:"range() erzeugt die Zahlenfolge, über die die for-Schleife läuft."},
   {type:"predict",lessonIndex:6,title:"String-Index verstehen",code:'wort = "Python"\nprint(wort[0])',question:"Was wird ausgegeben?",options:["P","y","Python"],correct:0,explanation:"Index 0 bezeichnet das erste Zeichen eines Strings."},
   {type:"predict",lessonIndex:7,title:"Listen verändern",code:'zahlen = [1, 2]\nzahlen.append(3)\nprint(zahlen[2])',question:"Welche Ausgabe erscheint?",options:["2","3","[1, 2, 3]"],correct:1,explanation:"append(3) hängt 3 an. Der Index 2 zeigt danach auf die 3."},
+  {
+    type:"explain",lessonIndex:7,title:"Listenindex erklären",code:'namen = ["Ana", "Ben", "Mia"]\nprint(namen[1])',question:"Erkläre, warum Ben ausgegeben wird.",
+    concepts:[
+      {label:"Index beginnt bei 0",required:true,variants:["index beginnt bei 0", "index startet bei 0", "bei 0 anfangen", "0 ist das erste", "listen beginnen bei 0", "zählung beginnt bei 0", "zaehlung beginnt bei 0"]},
+      {label:"Index 1 ist das zweite Element",required:true,variants:["index 1 ist ben", "1 ist ben", "zweite element", "zweiter eintrag", "ben ist index 1"]}
+    ],
+    explanation:"Listen zählen ab Index 0. Deshalb ist Ana Index 0 und Ben Index 1."
+  },
   {type:"debug",lessonIndex:7,title:"Listenindex prüfen",code:'namen = ["Ana", "Ben"]\nprint(namen[2])',question:"Was ist das Problem?",options:["Listen dürfen keinen Text enthalten","Index 2 existiert hier nicht","print() kann keine Listenelemente ausgeben"],correct:1,explanation:"Die Liste hat nur die Indizes 0 und 1. Index 2 liegt außerhalb der Liste."},
-  {type:"predict",lessonIndex:9,title:"Dictionary lesen",code:'person = {"name": "Mia", "alter": 30}\nprint(person["name"])',question:"Was wird ausgegeben?",options:["name","Mia","30"],correct:1,explanation:"Über den Schlüssel \"name\" wird der Wert \"Mia\" gelesen."},
+  {type:"predict",lessonIndex:9,title:"Dictionary lesen",code:'person = {"name": "Mia", "alter": 30}\nprint(person["name"])',question:"Was wird ausgegeben?",options:["name","Mia","30"],correct:1,explanation:'Über den Schlüssel "name" wird der Wert "Mia" gelesen.'},
+  {
+    type:"explain",lessonIndex:9,title:"Dictionary erklären",code:'person = {"name": "Mia", "alter": 30}\nprint(person["name"])',question:"Erkläre, wie Python hier an Mia kommt.",
+    concepts:[
+      {label:"name ist der Schlüssel",required:true,variants:["name ist schlüssel", "name ist der schlüssel", "schlüssel name", "key name", "über name", "mit name"]},
+      {label:"Mia ist der zugehörige Wert",required:true,variants:["wert mia", "mia ist wert", "gibt mia", "bekommt mia", "findet mia", "liest mia"]}
+    ],
+    explanation:'Das Dictionary speichert Schlüssel-Wert-Paare. Mit dem Schlüssel "name" wird der zugehörige Wert "Mia" gelesen.'
+  },
   {
     type:"explain",lessonIndex:10,title:"Funktion und return",code:'def addiere(a, b):\n    return a + b\n\nergebnis = addiere(2, 3)\nprint(ergebnis)',question:"Erkläre, was beim Funktionsaufruf passiert und welcher Wert zurückkommt.",
-    conceptGroups:[
-      ["2 und 3", "2,3", "2, 3", "2+3", "2 + 3", "argument"],
-      ["5", "fünf"],
-      ["return", "zurück", "zurueck", "ergebnis", "ausgabe", "kommt raus", "gibt 5"]
+    concepts:[
+      {label:"2 und 3 werden verarbeitet",required:true,variants:["2 und 3", "2,3", "2, 3", "2+3", "2 + 3", "addiert", "zusammengezählt", "zusammengezaehlt"]},
+      {label:"Ergebnis ist 5",required:true,variants:["5", "fünf", "fuenf"]},
+      {label:"return gibt den Wert zurück",required:false,variants:["return", "zurück", "zurueck", "liefert", "gibt zurück", "gibt zurueck"]},
+      {label:"Argumente gehen an a und b",required:false,variants:["argument", "a und b", "parameter", "übergeben", "uebergeben"]}
     ],
-    explanation:"Beim Aufruf werden 2 und 3 an a und b übergeben. return berechnet a + b und liefert den Wert 5 zurück; anschließend wird 5 ausgegeben."
+    explanation:"Der Kern stimmt, wenn du erkennst: 2 und 3 werden addiert und das Ergebnis ist 5. Vollständig erklärt: 2 und 3 werden an a und b übergeben und return liefert 5 zurück."
   },
   {type:"predict",lessonIndex:10,title:"Return vorhersagen",code:'def verdopple(zahl):\n    return zahl * 2\n\nwert = verdopple(4)\nprint(wert)',question:"Welche Ausgabe erscheint?",options:["4","8","zahl * 2"],correct:1,explanation:"Die Funktion erhält 4, multipliziert mit 2 und gibt 8 zurück."},
   {type:"debug",lessonIndex:12,title:"Exception verstehen",code:'zahl = int("Hallo")',question:"Welche Exception ist hier zu erwarten?",options:["ValueError","NameError","IndexError"],correct:0,explanation:"Der Text Hallo kann nicht in eine Ganzzahl umgewandelt werden. Das führt zu ValueError."},
+  {
+    type:"explain",lessonIndex:12,title:"ValueError erklären",code:'zahl = int("Hallo")',question:"Erkläre in eigenen Worten, warum hier ein Fehler entsteht.",
+    concepts:[
+      {label:"Hallo ist Text",required:true,variants:["hallo ist text", "hallo ist string", "text hallo", "string hallo", "keine zahl", "kein zahlwert"]},
+      {label:"int kann ihn nicht in eine Ganzzahl umwandeln",required:true,variants:["int kann nicht", "nicht in zahl", "nicht in ganzzahl", "umwandlung geht nicht", "kann nicht umgewandelt", "nicht konvertieren"]}
+    ],
+    explanation:'"Hallo" ist kein gültiger Ganzzahl-Text. int("Hallo") kann deshalb keine Ganzzahl erzeugen und löst einen ValueError aus.'
+  },
   {type:"predict",lessonIndex:16,title:"Comprehension lesen",code:'zahlen = [1, 2, 3, 4]\ngerade = [x for x in zahlen if x % 2 == 0]\nprint(len(gerade))',question:"Wie viele Elemente enthält gerade?",options:["1","2","4"],correct:1,explanation:"2 und 4 sind gerade, also enthält die neue Liste zwei Elemente."},
+  {
+    type:"explain",lessonIndex:16,title:"Comprehension erklären",code:'zahlen = [1, 2, 3, 4]\ngerade = [x for x in zahlen if x % 2 == 0]',question:"Erkläre kurz, was in gerade gespeichert wird.",
+    concepts:[
+      {label:"nur gerade Zahlen",required:true,variants:["gerade zahlen", "nur gerade", "zahlen die gerade", "durch 2 teilbar"]},
+      {label:"2 und 4",required:true,variants:["2 und 4", "2,4", "2, 4", "[2, 4]", "[2,4]"]}
+    ],
+    explanation:"Die Comprehension filtert die geraden Zahlen aus der ursprünglichen Liste. In gerade stehen deshalb 2 und 4."
+  },
   {type:"challenge",lessonIndex:2,title:"Offene Problemlösung",question:"Schreibe ein Programm, das die Zahl 17 durch 5 teilt und nur den Rest ausgibt. Die Ausgabe muss exakt 2 sein.",starter:'# Finde selbst heraus, welcher Operator passt.\n',expected_output:"2",explanation:"Hier musst du selbst erkennen, dass der Modulo-Operator % gebraucht wird."},
   {type:"challenge",lessonIndex:5,title:"Basics kombinieren",question:"Gib mit einer Schleife die Zahlen 1 bis 3 jeweils in einer neuen Zeile aus. Die Ausgabe muss exakt 1, 2, 3 sein.",starter:'# Löse die Aufgabe ohne vorgegebene Syntax.\n',expected_output:"1\n2\n3",explanation:"Du musst range() und for selbst kombinieren."},
   {type:"challenge",lessonIndex:7,title:"Liste anwenden",question:"Erstelle eine Liste mit 10, 20 und 30 und gib nur das zweite Element aus. Die Ausgabe muss exakt 20 sein.",starter:'# Erstelle zuerst eine Liste.\n',expected_output:"20",explanation:"Listen beginnen beim Index 0. Das zweite Element hat daher Index 1."},
@@ -56,23 +106,44 @@ function typeLabel(type) {
 }
 
 function normalizeExplanation(value) {
-  return value
+  return String(value || "")
     .toLowerCase()
-    .replace(/[–—]/g, "-")
-    .replace(/\s+/g, " ")
+    .replace(/[ä]/g,"ae")
+    .replace(/[ö]/g,"oe")
+    .replace(/[ü]/g,"ue")
+    .replace(/[ß]/g,"ss")
+    .replace(/[–—]/g,"-")
+    .replace(/[.,;:!?()[\]{}'\"]/g," ")
+    .replace(/\s+/g," ")
     .trim();
+}
+
+function containsVariant(text, variant) {
+  const normalized = normalizeExplanation(variant);
+  return normalized.length > 0 && text.includes(normalized);
 }
 
 function evaluateExplanation(exercise, answer) {
   const text = normalizeExplanation(answer);
-  if (!text || text.length < 4) return false;
+  if (!text || text.length < 4) return {passed:false,complete:false,matched:0,total:0,missing:[]};
 
-  const groups = exercise.conceptGroups || [];
-  if (!groups.length) return false;
+  const concepts = exercise.concepts || [];
+  if (!concepts.length) return {passed:false,complete:false,matched:0,total:0,missing:[]};
 
-  return groups.every(group =>
-    group.some(variant => text.includes(normalizeExplanation(variant)))
-  );
+  const results = concepts.map(concept => ({
+    ...concept,
+    matched:(concept.variants || []).some(variant => containsVariant(text, variant)),
+  }));
+  const required = results.filter(item => item.required !== false);
+  const passed = required.every(item => item.matched);
+  const matched = results.filter(item => item.matched).length;
+  return {
+    passed,
+    complete:passed && matched === results.length,
+    matched,
+    total:results.length,
+    missing:results.filter(item => !item.matched).map(item => item.label),
+  };
 }
 
 export default function ActivePractice({ lessons, refreshProfile }) {
@@ -115,9 +186,14 @@ export default function ActivePractice({ lessons, refreshProfile }) {
 
   async function check() {
     let passed = false;
+    let detail = null;
+
     if (exercise.type === "predict" || exercise.type === "debug") passed = selected === exercise.correct;
-    if (exercise.type === "fill") passed = exercise.answers.some(x => x.toLowerCase() === answer.trim().toLowerCase());
-    if (exercise.type === "explain") passed = evaluateExplanation(exercise, answer);
+    if (exercise.type === "fill") passed = exercise.answers.some(x => normalizeExplanation(x) === normalizeExplanation(answer));
+    if (exercise.type === "explain") {
+      detail = evaluateExplanation(exercise, answer);
+      passed = detail.passed;
+    }
 
     if (exercise.type === "challenge") {
       const response = await fetch(`${API}/check`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code,expected_output:exercise.expected_output,lesson_id:lesson?.id || "practice",step_id:`practice-${exercise.lessonIndex}-${index}`,xp:25})});
@@ -128,7 +204,8 @@ export default function ActivePractice({ lessons, refreshProfile }) {
       await refreshProfile?.();
       return;
     }
-    setResult({passed});
+
+    setResult({passed,detail});
     setSession(s=>({correct:s.correct+(passed?1:0),total:s.total+1}));
     await record(passed);
   }
@@ -146,6 +223,12 @@ export default function ActivePractice({ lessons, refreshProfile }) {
 
   if (!exercise) return null;
 
+  const explainFeedback = exercise.type === "explain" && result?.passed
+    ? result.detail?.complete
+      ? "Richtig – vollständig erklärt."
+      : "Richtig – der Kern stimmt."
+    : null;
+
   return <section className="practice-page">
     <div className="path-heading"><span className="eyebrow">Aktives Training</span><h1>Python wirklich anwenden</h1><p>Wähle, wie du trainieren möchtest. Der Lerninhalt bleibt gleich, die Lernform ändert sich.</p></div>
 
@@ -161,13 +244,17 @@ export default function ActivePractice({ lessons, refreshProfile }) {
       <p className="question">{exercise.question}</p>
 
       {(exercise.type === "predict" || exercise.type === "debug") && <div className="options">{exercise.options.map((o,i)=><button key={o} className={`option ${selected===i?"selected":""} ${result && i===exercise.correct?"correct":""} ${result && selected===i && i!==exercise.correct?"wrong":""}`} disabled={result!==null} onClick={()=>setSelected(i)}><span>{String.fromCharCode(65+i)}</span><code>{o}</code></button>)}</div>}
-      {(exercise.type === "fill" || exercise.type === "explain") && <textarea className="practice-answer" value={answer} disabled={result!==null} onChange={e=>setAnswer(e.target.value)} placeholder={exercise.type === "explain" ? "Erkläre den Ablauf in deinen eigenen Worten …" : "Deine Antwort …"}/>} 
+      {(exercise.type === "fill" || exercise.type === "explain") && <textarea className="practice-answer" value={answer} disabled={result!==null} onChange={e=>setAnswer(e.target.value)} placeholder={exercise.type === "explain" ? "Erkläre den Ablauf in deinen eigenen Worten …" : "Deine Antwort …"}/>}
       {exercise.type === "challenge" && <><div className="editor-shell"><div className="editor-toolbar"><span>practice.py</span><button onClick={runCode}><Play size={15}/> Ausführen</button></div><textarea className="editor" value={code} onChange={e=>setCode(e.target.value)} spellCheck={false}/></div><div className="console"><div className="console-title">Ausgabe</div><pre>{consoleText || "Deine Ausgabe erscheint hier."}</pre></div></>}
 
       {visualCode && !visualCode.includes("____") && <div className="practice-viz-toggle"><button className="ghost" onClick={()=>setShowVisualizer(v=>!v)}><Eye size={16}/> {showVisualizer?"Visualizer schließen":"Code Schritt für Schritt"}</button></div>}
       {showVisualizer && visualCode && !visualCode.includes("____") && <BasicVisualizer code={visualCode}/>} 
 
-      {result && <div className={`feedback ${result.passed?"success":"error"}`}><strong>{result.passed?(exercise.type==="explain"?"Richtig – der Kern stimmt.":"Richtig – das sitzt."):"Noch nicht sicher."}</strong><p>{exercise.explanation}</p></div>}
+      {result && <div className={`feedback ${result.passed?"success":"error"}`}>
+        <strong>{result.passed ? (explainFeedback || "Richtig – das sitzt.") : "Noch nicht sicher."}</strong>
+        <p>{exercise.explanation}</p>
+        {exercise.type === "explain" && result.passed && result.detail?.missing?.length > 0 && <p><strong>Noch genauer könntest du erwähnen:</strong> {result.detail.missing.join(", ")}.</p>}
+      </div>}
       <div className="practice-actions">{!result ? <button className="primary" onClick={check} disabled={(exercise.type==="predict"||exercise.type==="debug")&&selected===null}><CheckCircle2 size={17}/> Prüfen</button> : <button className="primary" onClick={next}>{index===pool.length-1?<RefreshCcw size={17}/>:<ChevronRight size={17}/>} {index===pool.length-1?"Neue Runde":"Nächste Aufgabe"}</button>}</div>
     </div>
   </section>;
