@@ -1,5 +1,7 @@
-from fastapi import FastAPI, HTTPException
+from contextlib import asynccontextmanager
 import os
+
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -17,8 +19,16 @@ from .database import (
 from .content import load_lessons, get_lesson, content_status
 from .runner import run_python
 
-VERSION = "0.5.0"
-app = FastAPI(title="PyLab API", version=VERSION)
+VERSION = "0.6.0"
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    init_db()
+    yield
+
+
+app = FastAPI(title="PyLab API", version=VERSION, lifespan=lifespan)
 
 DEFAULT_ORIGINS = [
     "http://localhost:3000",
@@ -38,14 +48,9 @@ app.add_middleware(
     allow_origins=allowed_origins,
     allow_origin_regex=r"https://.*\.up\.railway\.app",
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type"],
 )
-
-
-@app.on_event("startup")
-def startup():
-    init_db()
 
 
 class RunRequest(BaseModel):
@@ -55,10 +60,11 @@ class RunRequest(BaseModel):
 
 class CheckRequest(BaseModel):
     code: str = Field(min_length=1, max_length=12000)
-    expected_output: str = Field(max_length=4000)
     lesson_id: str = Field(min_length=1, max_length=100)
     step_id: str = Field(min_length=1, max_length=120)
-    xp: int = Field(default=40, ge=0, le=200)
+    stdin: str = Field(default="", max_length=4000)
+    expected_output: str | None = Field(default=None, max_length=4000)
+    xp: int | None = Field(default=None, ge=0, le=50)
 
 
 class ProgressRequest(BaseModel):
@@ -79,12 +85,16 @@ def require_lesson(lesson_id: str):
     return item
 
 
+def find_step(lesson: dict, step_id: str):
+    return next((step for step in lesson.get("steps", []) if step.get("id") == step_id), None)
+
+
 def rank_for(level: int, average_mastery: int, completed: int) -> str:
     if completed >= 18 and average_mastery >= 80:
         return "Python Basics Master"
-    if average_mastery >= 70 or level >= 16:
+    if completed >= 12 and average_mastery >= 65:
         return "Python Fortgeschritten"
-    if average_mastery >= 40 or level >= 8:
+    if completed >= 5 or average_mastery >= 35 or level >= 8:
         return "Python Grundlagen"
     return "Python Anfänger"
 
@@ -130,21 +140,38 @@ def run(req: RunRequest):
 
 @app.post("/check")
 def check(req: CheckRequest):
-    require_lesson(req.lesson_id)
-    result = run_python(req.code)
+    lesson_item = require_lesson(req.lesson_id)
+    content_step = find_step(lesson_item, req.step_id)
+
+    if content_step is not None:
+        if content_step.get("type") != "code":
+            raise HTTPException(status_code=422, detail="Dieser Schritt ist keine Code-Aufgabe")
+        expected = str(content_step.get("expected_output", "")).strip()
+        reward = int(content_step.get("xp", 40))
+        reward_reason = f"step:{req.lesson_id}:{req.step_id}"
+    else:
+        # Freie Trainingsaufgaben leben derzeit im Frontend. Sie dürfen nur eine
+        # kleine, feste Belohnung vergeben und benötigen eine erwartete Ausgabe.
+        if not req.step_id.startswith("practice-") or req.expected_output is None:
+            raise HTTPException(status_code=404, detail="Aufgabe nicht gefunden")
+        expected = req.expected_output.strip()
+        reward = min(req.xp or 25, 25)
+        reward_reason = f"practice:{req.lesson_id}:{req.step_id}"
+
+    result = run_python(req.code, req.stdin)
     actual = result["stdout"].strip()
-    expected = req.expected_output.strip()
     passed = not result["stderr"] and actual == expected
-    reward = req.xp if passed else 0
+
     if passed:
-        add_xp(reward, f"step:{req.lesson_id}:{req.step_id}")
+        add_xp(reward, reward_reason)
     mastery = record_mastery_attempt(req.lesson_id, passed)
+
     return {
         **result,
         "passed": passed,
         "expected": expected,
         "actual": actual,
-        "xp_awarded": reward,
+        "xp_awarded": reward if passed else 0,
         "mastery": mastery,
     }
 
@@ -189,29 +216,35 @@ def profile():
         level += 1
         threshold += 200 + level * 25
 
+    all_lessons = load_lessons()
+    lesson_count = len(all_lessons)
     progress_items = get_progress()
     mastery_items = get_mastery()
     due_items = get_due_reviews()
     completed = sum(1 for item in progress_items if item["completed"])
-    average_mastery = (
-        round(sum(item["score"] for item in mastery_items) / len(mastery_items))
-        if mastery_items else 0
-    )
+
+    mastery_sum = sum(item["score"] for item in mastery_items)
+    overall_mastery = round(mastery_sum / lesson_count) if lesson_count else 0
+    attempted_average = round(mastery_sum / len(mastery_items)) if mastery_items else 0
+
     mastery_stats = {
         "secure": sum(1 for item in mastery_items if item["score"] >= 90),
         "good": sum(1 for item in mastery_items if 70 <= item["score"] < 90),
         "building": sum(1 for item in mastery_items if 40 <= item["score"] < 70),
         "weak": sum(1 for item in mastery_items if item["score"] < 40),
+        "unrated": max(0, lesson_count - len(mastery_items)),
     }
 
     return {
         "xp": xp,
         "level": level,
-        "rank": rank_for(level, average_mastery, completed),
+        "rank": rank_for(level, overall_mastery, completed),
         "progress": progress_items,
         "completed_lessons": completed,
+        "lesson_count": lesson_count,
         "mastery": mastery_items,
         "mastery_stats": mastery_stats,
-        "average_mastery": average_mastery,
+        "average_mastery": overall_mastery,
+        "attempted_mastery_average": attempted_average,
         "due_reviews": due_items,
     }
