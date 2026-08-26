@@ -13,13 +13,28 @@ const EXERCISES = [
   {type:"fill",lessonIndex:2,title:"Modulo einsetzen",code:'rest = 7 __ 2\nprint(rest)',question:"Welcher Operator gehört in die Lücke, damit 1 ausgegeben wird?",answers:["%"],explanation:"% ist der Modulo-Operator. Er liefert den Rest einer Division."},
   {type:"debug",lessonIndex:3,title:"Typfehler erkennen",code:'alter = input("Alter: ")\nprint(alter + 1)',question:"Was muss geändert werden, damit gerechnet werden kann?",options:["input() durch print() ersetzen","alter vor der Addition mit int() umwandeln","Die 1 in Anführungszeichen setzen"],correct:1,explanation:"input() liefert immer einen String. Für eine Ganzzahlrechnung brauchst du int()."},
   {type:"predict",lessonIndex:4,title:"Bedingung lesen",code:'alter = 20\nif alter >= 18:\n    print("Ja")\nelse:\n    print("Nein")',question:"Welche Ausgabe erscheint?",options:["Ja","Nein","20"],correct:0,explanation:"20 ist größer oder gleich 18, deshalb wird der if-Zweig ausgeführt."},
-  {type:"explain",lessonIndex:5,title:"Schleife erklären",code:'for zahl in range(1, 4):\n    print(zahl)',question:"Erkläre in eigenen Worten, was die Schleife macht.",keywords:["1","2","3"],explanation:"Eine gute Erklärung nennt, dass die Schleife nacheinander die Werte 1, 2 und 3 verarbeitet und ausgibt."},
+  {
+    type:"explain",lessonIndex:5,title:"Schleife erklären",code:'for zahl in range(1, 4):\n    print(zahl)',question:"Erkläre in eigenen Worten, was die Schleife macht.",
+    conceptGroups:[
+      ["print", "ausgib", "ausgabe", "zeigt"],
+      ["1-3", "1 - 3", "1 bis 3", "1,2,3", "1, 2, 3", "1 2 3", "zahlen 1 bis 3", "werte 1 bis 3"]
+    ],
+    explanation:"Richtig ist der Kern: Die Schleife gibt die Zahlen 1 bis 3 aus. Noch präziser: range(1, 4) liefert nacheinander 1, 2 und 3; 4 selbst ist nicht mehr enthalten."
+  },
   {type:"fill",lessonIndex:5,title:"Schleife vervollständigen",code:'for zahl in ____(3):\n    print(zahl)',question:"Welche Funktion gehört in die Lücke?",answers:["range","range()"],explanation:"range() erzeugt die Zahlenfolge, über die die for-Schleife läuft."},
   {type:"predict",lessonIndex:6,title:"String-Index verstehen",code:'wort = "Python"\nprint(wort[0])',question:"Was wird ausgegeben?",options:["P","y","Python"],correct:0,explanation:"Index 0 bezeichnet das erste Zeichen eines Strings."},
   {type:"predict",lessonIndex:7,title:"Listen verändern",code:'zahlen = [1, 2]\nzahlen.append(3)\nprint(zahlen[2])',question:"Welche Ausgabe erscheint?",options:["2","3","[1, 2, 3]"],correct:1,explanation:"append(3) hängt 3 an. Der Index 2 zeigt danach auf die 3."},
   {type:"debug",lessonIndex:7,title:"Listenindex prüfen",code:'namen = ["Ana", "Ben"]\nprint(namen[2])',question:"Was ist das Problem?",options:["Listen dürfen keinen Text enthalten","Index 2 existiert hier nicht","print() kann keine Listenelemente ausgeben"],correct:1,explanation:"Die Liste hat nur die Indizes 0 und 1. Index 2 liegt außerhalb der Liste."},
   {type:"predict",lessonIndex:9,title:"Dictionary lesen",code:'person = {"name": "Mia", "alter": 30}\nprint(person["name"])',question:"Was wird ausgegeben?",options:["name","Mia","30"],correct:1,explanation:"Über den Schlüssel \"name\" wird der Wert \"Mia\" gelesen."},
-  {type:"explain",lessonIndex:10,title:"Funktion und return",code:'def addiere(a, b):\n    return a + b\n\nergebnis = addiere(2, 3)\nprint(ergebnis)',question:"Erkläre, was beim Funktionsaufruf passiert und welcher Wert zurückkommt.",keywords:["2","3","5"],explanation:"2 und 3 werden als Argumente übergeben, a und b erhalten diese Werte und return liefert 5 zurück."},
+  {
+    type:"explain",lessonIndex:10,title:"Funktion und return",code:'def addiere(a, b):\n    return a + b\n\nergebnis = addiere(2, 3)\nprint(ergebnis)',question:"Erkläre, was beim Funktionsaufruf passiert und welcher Wert zurückkommt.",
+    conceptGroups:[
+      ["2 und 3", "2,3", "2, 3", "2+3", "2 + 3", "argument"],
+      ["5", "fünf"],
+      ["return", "zurück", "zurueck", "ergebnis", "ausgabe", "kommt raus", "gibt 5"]
+    ],
+    explanation:"Beim Aufruf werden 2 und 3 an a und b übergeben. return berechnet a + b und liefert den Wert 5 zurück; anschließend wird 5 ausgegeben."
+  },
   {type:"predict",lessonIndex:10,title:"Return vorhersagen",code:'def verdopple(zahl):\n    return zahl * 2\n\nwert = verdopple(4)\nprint(wert)',question:"Welche Ausgabe erscheint?",options:["4","8","zahl * 2"],correct:1,explanation:"Die Funktion erhält 4, multipliziert mit 2 und gibt 8 zurück."},
   {type:"debug",lessonIndex:12,title:"Exception verstehen",code:'zahl = int("Hallo")',question:"Welche Exception ist hier zu erwarten?",options:["ValueError","NameError","IndexError"],correct:0,explanation:"Der Text Hallo kann nicht in eine Ganzzahl umgewandelt werden. Das führt zu ValueError."},
   {type:"predict",lessonIndex:16,title:"Comprehension lesen",code:'zahlen = [1, 2, 3, 4]\ngerade = [x for x in zahlen if x % 2 == 0]\nprint(len(gerade))',question:"Wie viele Elemente enthält gerade?",options:["1","2","4"],correct:1,explanation:"2 und 4 sind gerade, also enthält die neue Liste zwei Elemente."},
@@ -38,6 +53,26 @@ const MODES = {
 
 function typeLabel(type) {
   return {predict:"Code vorhersagen",debug:"Fehler finden",fill:"Lückencode",explain:"Code erklären",challenge:"Problemlösen"}[type] || type;
+}
+
+function normalizeExplanation(value) {
+  return value
+    .toLowerCase()
+    .replace(/[–—]/g, "-")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function evaluateExplanation(exercise, answer) {
+  const text = normalizeExplanation(answer);
+  if (!text || text.length < 4) return false;
+
+  const groups = exercise.conceptGroups || [];
+  if (!groups.length) return false;
+
+  return groups.every(group =>
+    group.some(variant => text.includes(normalizeExplanation(variant)))
+  );
 }
 
 export default function ActivePractice({ lessons, refreshProfile }) {
@@ -82,10 +117,8 @@ export default function ActivePractice({ lessons, refreshProfile }) {
     let passed = false;
     if (exercise.type === "predict" || exercise.type === "debug") passed = selected === exercise.correct;
     if (exercise.type === "fill") passed = exercise.answers.some(x => x.toLowerCase() === answer.trim().toLowerCase());
-    if (exercise.type === "explain") {
-      const text = answer.toLowerCase();
-      passed = exercise.keywords.every(k => text.includes(k.toLowerCase()));
-    }
+    if (exercise.type === "explain") passed = evaluateExplanation(exercise, answer);
+
     if (exercise.type === "challenge") {
       const response = await fetch(`${API}/check`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code,expected_output:exercise.expected_output,lesson_id:lesson?.id || "practice",step_id:`practice-${exercise.lessonIndex}-${index}`,xp:25})});
       const data = await response.json();
@@ -134,7 +167,7 @@ export default function ActivePractice({ lessons, refreshProfile }) {
       {visualCode && !visualCode.includes("____") && <div className="practice-viz-toggle"><button className="ghost" onClick={()=>setShowVisualizer(v=>!v)}><Eye size={16}/> {showVisualizer?"Visualizer schließen":"Code Schritt für Schritt"}</button></div>}
       {showVisualizer && visualCode && !visualCode.includes("____") && <BasicVisualizer code={visualCode}/>} 
 
-      {result && <div className={`feedback ${result.passed?"success":"error"}`}><strong>{result.passed?"Richtig – das sitzt.":"Noch nicht sicher."}</strong><p>{exercise.explanation}</p></div>}
+      {result && <div className={`feedback ${result.passed?"success":"error"}`}><strong>{result.passed?(exercise.type==="explain"?"Richtig – der Kern stimmt.":"Richtig – das sitzt."):"Noch nicht sicher."}</strong><p>{exercise.explanation}</p></div>}
       <div className="practice-actions">{!result ? <button className="primary" onClick={check} disabled={(exercise.type==="predict"||exercise.type==="debug")&&selected===null}><CheckCircle2 size={17}/> Prüfen</button> : <button className="primary" onClick={next}>{index===pool.length-1?<RefreshCcw size={17}/>:<ChevronRight size={17}/>} {index===pool.length-1?"Neue Runde":"Nächste Aufgabe"}</button>}</div>
     </div>
   </section>;
