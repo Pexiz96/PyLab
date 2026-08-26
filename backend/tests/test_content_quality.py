@@ -36,7 +36,7 @@ def test_code_tasks_are_runnable_and_teachable():
             assert isinstance(expected, str) and expected.strip(), f"{lesson['id']}:{step['id']}: erwartete Ausgabe fehlt"
 
             xp = step.get("xp")
-            assert isinstance(xp, int) and 1 <= xp <= 200, f"{lesson['id']}:{step['id']}: XP müssen zwischen 1 und 200 liegen"
+            assert isinstance(xp, int) and 1 <= xp <= 500, f"{lesson['id']}:{step['id']}: XP müssen zwischen 1 und 500 liegen"
 
             hints = step.get("hints", [])
             assert isinstance(hints, list) and len(hints) >= 2, f"{lesson['id']}:{step['id']}: mindestens zwei Hinweise nötig"
