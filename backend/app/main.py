@@ -3,11 +3,21 @@ import os
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from .database import init_db, get_total_xp, add_xp, save_progress, get_progress
+from .database import (
+    init_db,
+    get_total_xp,
+    add_xp,
+    save_progress,
+    get_progress,
+    record_mastery_attempt,
+    get_mastery,
+    get_mastery_for_lesson,
+    get_due_reviews,
+)
 from .content import load_lessons, get_lesson, content_status
 from .runner import run_python
 
-app = FastAPI(title="PyLab API", version="0.3.0")
+app = FastAPI(title="PyLab API", version="0.4.0")
 
 DEFAULT_ORIGINS = [
     "http://localhost:3000",
@@ -32,13 +42,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.on_event("startup")
 def startup():
     init_db()
 
+
 class RunRequest(BaseModel):
     code: str
     stdin: str = ""
+
 
 class CheckRequest(BaseModel):
     code: str
@@ -47,33 +60,41 @@ class CheckRequest(BaseModel):
     step_id: str
     xp: int = 40
 
+
 class ProgressRequest(BaseModel):
     lesson_id: str
     step_index: int
     completed: bool = False
+
 
 @app.get("/")
 def root():
     return {
         "app": "PyLab API",
         "status": "ok",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "health": "/health",
         "content_status": "/content-status",
+        "mastery": "/mastery",
+        "reviews": "/reviews/due",
         "docs": "/docs",
     }
 
+
 @app.get("/health")
 def health():
-    return {"status": "ok", "app": "PyLab", "version": "0.3.0"}
+    return {"status": "ok", "app": "PyLab", "version": "0.4.0"}
+
 
 @app.get("/content-status")
 def lesson_content_status():
     return content_status()
 
+
 @app.get("/lessons")
 def lessons():
     return load_lessons()
+
 
 @app.get("/lessons/{lesson_id}")
 def lesson(lesson_id: str):
@@ -82,9 +103,11 @@ def lesson(lesson_id: str):
         raise HTTPException(status_code=404, detail="Lektion nicht gefunden")
     return item
 
+
 @app.post("/run")
 def run(req: RunRequest):
     return run_python(req.code, req.stdin)
+
 
 @app.post("/check")
 def check(req: CheckRequest):
@@ -97,18 +120,38 @@ def check(req: CheckRequest):
     if passed:
         add_xp(reward, f"step:{req.lesson_id}:{req.step_id}")
 
+    mastery = record_mastery_attempt(req.lesson_id, passed)
+
     return {
         **result,
         "passed": passed,
         "expected": expected,
         "actual": actual,
         "xp_awarded": reward,
+        "mastery": mastery,
     }
+
 
 @app.post("/progress")
 def progress(req: ProgressRequest):
     save_progress(req.lesson_id, req.step_index, req.completed)
     return {"ok": True}
+
+
+@app.get("/mastery")
+def mastery():
+    return get_mastery()
+
+
+@app.get("/mastery/{lesson_id}")
+def mastery_for_lesson(lesson_id: str):
+    return get_mastery_for_lesson(lesson_id)
+
+
+@app.get("/reviews/due")
+def due_reviews():
+    return get_due_reviews()
+
 
 @app.get("/profile")
 def profile():
@@ -118,9 +161,20 @@ def profile():
     while xp >= threshold and level < 100:
         level += 1
         threshold += 200 + level * 25
+
+    mastery_items = get_mastery()
+    average_mastery = (
+        round(sum(item["score"] for item in mastery_items) / len(mastery_items))
+        if mastery_items
+        else 0
+    )
+
     return {
         "xp": xp,
         "level": level,
         "rank": "Python Anfänger" if level <= 10 else "Python Grundlagen",
         "progress": get_progress(),
+        "mastery": mastery_items,
+        "average_mastery": average_mastery,
+        "due_reviews": get_due_reviews(),
     }
