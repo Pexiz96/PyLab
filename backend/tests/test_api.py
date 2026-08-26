@@ -7,6 +7,7 @@ os.environ["PYLAB_DB_PATH"] = str(TEST_DB)
 
 from fastapi.testclient import TestClient  # noqa: E402
 from app.main import app  # noqa: E402
+from app.database import add_xp, get_total_xp  # noqa: E402
 
 client = TestClient(app)
 
@@ -68,6 +69,25 @@ def test_progress_rejects_out_of_range_step():
     assert response.status_code == 422
 
 
+def test_furthest_progress_is_not_lost_when_revisiting_old_steps():
+    lesson = first_lesson()
+    furthest = min(3, len(lesson["steps"]) - 1)
+
+    assert client.post(
+        "/progress",
+        json={"lesson_id": lesson["id"], "step_index": furthest, "completed": False},
+    ).status_code == 200
+
+    assert client.post(
+        "/progress",
+        json={"lesson_id": lesson["id"], "step_index": 0, "completed": False},
+    ).status_code == 200
+
+    progress = client.get("/profile").json()["progress"]
+    saved = next(item for item in progress if item["lesson_id"] == lesson["id"])
+    assert saved["step_index"] >= furthest
+
+
 def test_completed_progress_is_not_lost_when_revisiting_old_steps():
     lesson = first_lesson()
     last_index = len(lesson["steps"]) - 1
@@ -86,6 +106,17 @@ def test_completed_progress_is_not_lost_when_revisiting_old_steps():
     saved = next(item for item in progress if item["lesson_id"] == lesson["id"])
     assert saved["completed"] == 1
     assert saved["step_index"] == last_index
+
+
+def test_xp_reason_is_idempotent():
+    before = get_total_xp()
+    reason = "test:unique-xp-reason"
+    add_xp(7, reason)
+    after_first = get_total_xp()
+    add_xp(7, reason)
+    after_second = get_total_xp()
+    assert after_first == before + 7
+    assert after_second == after_first
 
 
 def test_empty_code_is_rejected():
