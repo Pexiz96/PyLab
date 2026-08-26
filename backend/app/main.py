@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 import os
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .database import (
     init_db,
@@ -17,7 +17,8 @@ from .database import (
 from .content import load_lessons, get_lesson, content_status
 from .runner import run_python
 
-app = FastAPI(title="PyLab API", version="0.4.1")
+VERSION = "0.5.0"
+app = FastAPI(title="PyLab API", version=VERSION)
 
 DEFAULT_ORIGINS = [
     "http://localhost:3000",
@@ -41,59 +42,95 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.on_event("startup")
 def startup():
     init_db()
 
+
 class RunRequest(BaseModel):
-    code: str
-    stdin: str = ""
+    code: str = Field(min_length=1, max_length=12000)
+    stdin: str = Field(default="", max_length=4000)
+
 
 class CheckRequest(BaseModel):
-    code: str
-    expected_output: str
-    lesson_id: str
-    step_id: str
-    xp: int = 40
+    code: str = Field(min_length=1, max_length=12000)
+    expected_output: str = Field(max_length=4000)
+    lesson_id: str = Field(min_length=1, max_length=100)
+    step_id: str = Field(min_length=1, max_length=120)
+    xp: int = Field(default=40, ge=0, le=200)
+
 
 class ProgressRequest(BaseModel):
-    lesson_id: str
-    step_index: int
+    lesson_id: str = Field(min_length=1, max_length=100)
+    step_index: int = Field(ge=0, le=1000)
     completed: bool = False
 
+
 class MasteryAttemptRequest(BaseModel):
-    lesson_id: str
+    lesson_id: str = Field(min_length=1, max_length=100)
     passed: bool
 
-@app.get("/")
-def root():
-    return {"app":"PyLab API","status":"ok","version":"0.4.1","health":"/health","content_status":"/content-status","mastery":"/mastery","reviews":"/reviews/due","docs":"/docs"}
 
-@app.get("/health")
-def health():
-    return {"status":"ok","app":"PyLab","version":"0.4.1"}
-
-@app.get("/content-status")
-def lesson_content_status():
-    return content_status()
-
-@app.get("/lessons")
-def lessons():
-    return load_lessons()
-
-@app.get("/lessons/{lesson_id}")
-def lesson(lesson_id: str):
+def require_lesson(lesson_id: str):
     item = get_lesson(lesson_id)
     if not item:
         raise HTTPException(status_code=404, detail="Lektion nicht gefunden")
     return item
 
+
+def rank_for(level: int, average_mastery: int, completed: int) -> str:
+    if completed >= 18 and average_mastery >= 80:
+        return "Python Basics Master"
+    if average_mastery >= 70 or level >= 16:
+        return "Python Fortgeschritten"
+    if average_mastery >= 40 or level >= 8:
+        return "Python Grundlagen"
+    return "Python Anfänger"
+
+
+@app.get("/")
+def root():
+    return {
+        "app": "PyLab API",
+        "status": "ok",
+        "version": VERSION,
+        "health": "/health",
+        "content_status": "/content-status",
+        "mastery": "/mastery",
+        "reviews": "/reviews/due",
+        "docs": "/docs",
+    }
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "app": "PyLab", "version": VERSION}
+
+
+@app.get("/content-status")
+def lesson_content_status():
+    return content_status()
+
+
+@app.get("/lessons")
+def lessons():
+    return load_lessons()
+
+
+@app.get("/lessons/{lesson_id}")
+def lesson(lesson_id: str):
+    return require_lesson(lesson_id)
+
+
 @app.post("/run")
 def run(req: RunRequest):
     return run_python(req.code, req.stdin)
 
+
 @app.post("/check")
 def check(req: CheckRequest):
+    require_lesson(req.lesson_id)
     result = run_python(req.code)
     actual = result["stdout"].strip()
     expected = req.expected_output.strip()
@@ -102,28 +139,46 @@ def check(req: CheckRequest):
     if passed:
         add_xp(reward, f"step:{req.lesson_id}:{req.step_id}")
     mastery = record_mastery_attempt(req.lesson_id, passed)
-    return {**result,"passed":passed,"expected":expected,"actual":actual,"xp_awarded":reward,"mastery":mastery}
+    return {
+        **result,
+        "passed": passed,
+        "expected": expected,
+        "actual": actual,
+        "xp_awarded": reward,
+        "mastery": mastery,
+    }
+
 
 @app.post("/mastery/attempt")
 def mastery_attempt(req: MasteryAttemptRequest):
+    require_lesson(req.lesson_id)
     return record_mastery_attempt(req.lesson_id, req.passed)
+
 
 @app.post("/progress")
 def progress(req: ProgressRequest):
+    item = require_lesson(req.lesson_id)
+    if req.step_index >= len(item["steps"]):
+        raise HTTPException(status_code=422, detail="Ungültiger Lektionsschritt")
     save_progress(req.lesson_id, req.step_index, req.completed)
     return {"ok": True}
+
 
 @app.get("/mastery")
 def mastery():
     return get_mastery()
 
+
 @app.get("/mastery/{lesson_id}")
 def mastery_for_lesson(lesson_id: str):
+    require_lesson(lesson_id)
     return get_mastery_for_lesson(lesson_id)
+
 
 @app.get("/reviews/due")
 def due_reviews():
     return get_due_reviews()
+
 
 @app.get("/profile")
 def profile():
@@ -133,14 +188,30 @@ def profile():
     while xp >= threshold and level < 100:
         level += 1
         threshold += 200 + level * 25
+
+    progress_items = get_progress()
     mastery_items = get_mastery()
-    average_mastery = round(sum(item["score"] for item in mastery_items) / len(mastery_items)) if mastery_items else 0
+    due_items = get_due_reviews()
+    completed = sum(1 for item in progress_items if item["completed"])
+    average_mastery = (
+        round(sum(item["score"] for item in mastery_items) / len(mastery_items))
+        if mastery_items else 0
+    )
+    mastery_stats = {
+        "secure": sum(1 for item in mastery_items if item["score"] >= 90),
+        "good": sum(1 for item in mastery_items if 70 <= item["score"] < 90),
+        "building": sum(1 for item in mastery_items if 40 <= item["score"] < 70),
+        "weak": sum(1 for item in mastery_items if item["score"] < 40),
+    }
+
     return {
         "xp": xp,
         "level": level,
-        "rank": "Python Anfänger" if level <= 10 else "Python Grundlagen",
-        "progress": get_progress(),
+        "rank": rank_for(level, average_mastery, completed),
+        "progress": progress_items,
+        "completed_lessons": completed,
         "mastery": mastery_items,
+        "mastery_stats": mastery_stats,
         "average_mastery": average_mastery,
-        "due_reviews": get_due_reviews(),
+        "due_reviews": due_items,
     }
