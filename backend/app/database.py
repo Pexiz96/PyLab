@@ -34,13 +34,13 @@ CREATE TABLE IF NOT EXISTS mastery (
 
 
 def connect():
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     con = sqlite3.connect(DB_PATH)
     con.row_factory = sqlite3.Row
     return con
 
 
 def init_db():
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     with connect() as con:
         con.executescript(SCHEMA)
 
