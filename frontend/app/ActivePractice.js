@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Bug, CheckCircle2, ChevronRight, Code2, Eye, FileQuestion, PencilLine, Play, RefreshCcw, Shuffle, Target } from "lucide-react";
+import { AlertCircle, Bug, CheckCircle2, ChevronRight, Code2, Eye, FileQuestion, PencilLine, Play, RefreshCcw, Shuffle, Target } from "lucide-react";
 import BasicVisualizer from "./BasicVisualizer";
 
 const API = "/backend-api";
@@ -24,17 +24,17 @@ const EXERCISES = [
   {
     type:"explain",lessonIndex:4,title:"if-Bedingung erklären",code:'alter = 20\nif alter >= 18:\n    print("Ja")\nelse:\n    print("Nein")',question:"Erkläre in eigenen Worten, warum Ja ausgegeben wird.",
     concepts:[
-      {label:"20 erfüllt die Bedingung",required:true,variants:["20 ist größer", "20 ist groesser", "20 >= 18", "20 ist mindestens 18", "alter ist größer", "alter ist groesser", "bedingung ist wahr", "bedingung stimmt"]},
-      {label:"if-Zweig wird ausgeführt",required:false,variants:["if wird ausgeführt", "if wird ausgefuehrt", "if zweig", "deshalb ja", "ja ausgegeben", "print ja"]}
+      {label:"20 erfüllt die Bedingung",required:true,variants:["20 ist größer","20 ist groesser","20 >= 18","20 ist mindestens 18","alter ist größer","alter ist groesser","bedingung ist wahr","bedingung stimmt"]},
+      {label:"if-Zweig wird ausgeführt",required:false,variants:["if wird ausgeführt","if wird ausgefuehrt","if zweig","deshalb ja","ja ausgegeben","print ja"]}
     ],
     explanation:"Richtig: 20 erfüllt die Bedingung alter >= 18. Deshalb läuft der if-Zweig und Ja wird ausgegeben."
   },
   {
     type:"explain",lessonIndex:5,title:"Schleife erklären",code:'for zahl in range(1, 4):\n    print(zahl)',question:"Erkläre in eigenen Worten, was die Schleife macht.",
     concepts:[
-      {label:"gibt Zahlen aus",required:true,variants:["print", "ausgib", "ausgabe", "zeigt", "schreibt"]},
-      {label:"Zahlen 1 bis 3",required:true,variants:["1-3", "1 - 3", "1 bis 3", "1,2,3", "1, 2, 3", "1 2 3", "zahlen 1 bis 3", "werte 1 bis 3"]},
-      {label:"4 ist nicht enthalten",required:false,variants:["4 nicht", "4 wird nicht", "bis 4 aber", "4 ausgeschlossen", "4 ist nicht dabei"]}
+      {label:"gibt Zahlen aus",required:true,variants:["print","ausgib","ausgabe","zeigt","schreibt"]},
+      {label:"Zahlen 1 bis 3",required:true,variants:["1-3","1 - 3","1 bis 3","1,2,3","1, 2, 3","1 2 3","zahlen 1 bis 3","werte 1 bis 3"]},
+      {label:"4 ist nicht enthalten",required:false,variants:["4 nicht","4 wird nicht","bis 4 aber","4 ausgeschlossen","4 ist nicht dabei"]}
     ],
     explanation:"Der Kern stimmt, wenn du erkennst, dass die Schleife 1, 2 und 3 ausgibt. Präziser: range(1, 4) endet vor der 4."
   },
@@ -44,8 +44,8 @@ const EXERCISES = [
   {
     type:"explain",lessonIndex:7,title:"Listenindex erklären",code:'namen = ["Ana", "Ben", "Mia"]\nprint(namen[1])',question:"Erkläre, warum Ben ausgegeben wird.",
     concepts:[
-      {label:"Index beginnt bei 0",required:true,variants:["index beginnt bei 0", "index startet bei 0", "bei 0 anfangen", "0 ist das erste", "listen beginnen bei 0", "zählung beginnt bei 0", "zaehlung beginnt bei 0"]},
-      {label:"Index 1 ist das zweite Element",required:true,variants:["index 1 ist ben", "1 ist ben", "zweite element", "zweiter eintrag", "ben ist index 1"]}
+      {label:"Index beginnt bei 0",required:true,variants:["index beginnt bei 0","index startet bei 0","bei 0 anfangen","0 ist das erste","listen beginnen bei 0","zählung beginnt bei 0","zaehlung beginnt bei 0"]},
+      {label:"Index 1 ist das zweite Element",required:true,variants:["index 1 ist ben","1 ist ben","zweite element","zweiter eintrag","ben ist index 1"]}
     ],
     explanation:"Listen zählen ab Index 0. Deshalb ist Ana Index 0 und Ben Index 1."
   },
@@ -54,18 +54,18 @@ const EXERCISES = [
   {
     type:"explain",lessonIndex:9,title:"Dictionary erklären",code:'person = {"name": "Mia", "alter": 30}\nprint(person["name"])',question:"Erkläre, wie Python hier an Mia kommt.",
     concepts:[
-      {label:"name ist der Schlüssel",required:true,variants:["name ist schlüssel", "name ist der schlüssel", "schlüssel name", "key name", "über name", "mit name"]},
-      {label:"Mia ist der zugehörige Wert",required:true,variants:["wert mia", "mia ist wert", "gibt mia", "bekommt mia", "findet mia", "liest mia"]}
+      {label:"name ist der Schlüssel",required:true,variants:["name ist schlüssel","name ist der schlüssel","schlüssel name","key name","über name","mit name"]},
+      {label:"Mia ist der zugehörige Wert",required:true,variants:["wert mia","mia ist wert","gibt mia","bekommt mia","findet mia","liest mia"]}
     ],
     explanation:'Das Dictionary speichert Schlüssel-Wert-Paare. Mit dem Schlüssel "name" wird der zugehörige Wert "Mia" gelesen.'
   },
   {
     type:"explain",lessonIndex:10,title:"Funktion und return",code:'def addiere(a, b):\n    return a + b\n\nergebnis = addiere(2, 3)\nprint(ergebnis)',question:"Erkläre, was beim Funktionsaufruf passiert und welcher Wert zurückkommt.",
     concepts:[
-      {label:"2 und 3 werden verarbeitet",required:true,variants:["2 und 3", "2,3", "2, 3", "2+3", "2 + 3", "addiert", "zusammengezählt", "zusammengezaehlt"]},
-      {label:"Ergebnis ist 5",required:true,variants:["5", "fünf", "fuenf"]},
-      {label:"return gibt den Wert zurück",required:false,variants:["return", "zurück", "zurueck", "liefert", "gibt zurück", "gibt zurueck"]},
-      {label:"Argumente gehen an a und b",required:false,variants:["argument", "a und b", "parameter", "übergeben", "uebergeben"]}
+      {label:"2 und 3 werden verarbeitet",required:true,variants:["2 und 3","2,3","2, 3","2+3","2 + 3","addiert","zusammengezählt","zusammengezaehlt"]},
+      {label:"Ergebnis ist 5",required:true,variants:["5","fünf","fuenf"]},
+      {label:"return gibt den Wert zurück",required:false,variants:["return","zurück","zurueck","liefert","gibt zurück","gibt zurueck"]},
+      {label:"Argumente gehen an a und b",required:false,variants:["argument","a und b","parameter","übergeben","uebergeben"]}
     ],
     explanation:"Der Kern stimmt, wenn du erkennst: 2 und 3 werden addiert und das Ergebnis ist 5. Vollständig erklärt: 2 und 3 werden an a und b übergeben und return liefert 5 zurück."
   },
@@ -74,8 +74,8 @@ const EXERCISES = [
   {
     type:"explain",lessonIndex:12,title:"ValueError erklären",code:'zahl = int("Hallo")',question:"Erkläre in eigenen Worten, warum hier ein Fehler entsteht.",
     concepts:[
-      {label:"Hallo ist Text",required:true,variants:["hallo ist text", "hallo ist string", "text hallo", "string hallo", "keine zahl", "kein zahlwert"]},
-      {label:"int kann ihn nicht in eine Ganzzahl umwandeln",required:true,variants:["int kann nicht", "nicht in zahl", "nicht in ganzzahl", "umwandlung geht nicht", "kann nicht umgewandelt", "nicht konvertieren"]}
+      {label:"Hallo ist Text",required:true,variants:["hallo ist text","hallo ist string","text hallo","string hallo","keine zahl","kein zahlwert"]},
+      {label:"int kann ihn nicht in eine Ganzzahl umwandeln",required:true,variants:["int kann nicht","nicht in zahl","nicht in ganzzahl","umwandlung geht nicht","kann nicht umgewandelt","nicht konvertieren"]}
     ],
     explanation:'"Hallo" ist kein gültiger Ganzzahl-Text. int("Hallo") kann deshalb keine Ganzzahl erzeugen und löst einen ValueError aus.'
   },
@@ -83,8 +83,8 @@ const EXERCISES = [
   {
     type:"explain",lessonIndex:16,title:"Comprehension erklären",code:'zahlen = [1, 2, 3, 4]\ngerade = [x for x in zahlen if x % 2 == 0]',question:"Erkläre kurz, was in gerade gespeichert wird.",
     concepts:[
-      {label:"nur gerade Zahlen",required:true,variants:["gerade zahlen", "nur gerade", "zahlen die gerade", "durch 2 teilbar"]},
-      {label:"2 und 4",required:true,variants:["2 und 4", "2,4", "2, 4", "[2, 4]", "[2,4]"]}
+      {label:"nur gerade Zahlen",required:true,variants:["gerade zahlen","nur gerade","zahlen die gerade","durch 2 teilbar"]},
+      {label:"2 und 4",required:true,variants:["2 und 4","2,4","2, 4","[2, 4]","[2,4]"]}
     ],
     explanation:"Die Comprehension filtert die geraden Zahlen aus der ursprünglichen Liste. In gerade stehen deshalb 2 und 4."
   },
@@ -146,6 +146,32 @@ function evaluateExplanation(exercise, answer) {
   };
 }
 
+async function apiJson(url, options = {}) {
+  const response = await fetch(url, options);
+  let data = null;
+  try { data = await response.json(); } catch { data = null; }
+  if (!response.ok) throw new Error(data?.detail || `HTTP ${response.status}`);
+  return data;
+}
+
+function stablePracticeId(exercise) {
+  const slug = `${exercise.type}-${exercise.lessonIndex}-${exercise.title}`
+    .toLowerCase()
+    .replace(/[^a-z0-9äöüß]+/g,"-")
+    .replace(/^-|-$/g,"");
+  return `practice-${slug}`;
+}
+
+function insertIndent(event, value, setValue) {
+  if (event.key !== "Tab") return;
+  event.preventDefault();
+  const target = event.currentTarget;
+  const start = target.selectionStart;
+  const end = target.selectionEnd;
+  setValue(`${value.slice(0,start)}    ${value.slice(end)}`);
+  requestAnimationFrame(()=>{target.selectionStart=target.selectionEnd=start+4;});
+}
+
 export default function ActivePractice({ lessons, refreshProfile }) {
   const [mode,setMode] = useState("mixed");
   const pool = useMemo(() => EXERCISES.filter(x => !MODES[mode].types || MODES[mode].types.includes(x.type)), [mode]);
@@ -157,63 +183,116 @@ export default function ActivePractice({ lessons, refreshProfile }) {
   const [consoleText,setConsoleText] = useState("");
   const [showVisualizer,setShowVisualizer] = useState(false);
   const [session,setSession] = useState({correct:0,total:0});
+  const [busy,setBusy] = useState("");
+  const [error,setError] = useState("");
   const exercise = pool[index] || pool[0];
   const lesson = lessons[exercise?.lessonIndex];
   const visualCode = exercise?.type === "challenge" ? code : (exercise?.code || "");
 
   useEffect(() => {
-    const saved = typeof window !== "undefined" ? window.localStorage.getItem("pylab-learning-mode") : null;
+    const saved = window.localStorage.getItem("pylab-learning-mode");
     if (saved && MODES[saved]) setMode(saved);
   }, []);
 
   function resetExercise(nextIndex = 0, nextPool = pool) {
     const item = nextPool[nextIndex] || nextPool[0];
-    setIndex(nextIndex); setSelected(null); setAnswer(""); setResult(null); setConsoleText(""); setCode(item?.starter || ""); setShowVisualizer(false);
+    setIndex(nextIndex);
+    setSelected(null);
+    setAnswer("");
+    setResult(null);
+    setConsoleText("");
+    setCode(item?.starter || "");
+    setShowVisualizer(false);
+    setError("");
+    setBusy("");
   }
 
   function changeMode(nextMode) {
     setMode(nextMode);
-    if (typeof window !== "undefined") window.localStorage.setItem("pylab-learning-mode", nextMode);
+    window.localStorage.setItem("pylab-learning-mode", nextMode);
     const nextPool = EXERCISES.filter(x => !MODES[nextMode].types || MODES[nextMode].types.includes(x.type));
+    setSession({correct:0,total:0});
     resetExercise(0, nextPool);
   }
 
+  function retry() {
+    setSelected(null);
+    setAnswer("");
+    setResult(null);
+    setError("");
+    setConsoleText("");
+  }
+
   async function record(passed) {
-    if (!lesson) return;
-    await fetch(`${API}/mastery/attempt`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({lesson_id:lesson.id,passed})});
+    if (!lesson) throw new Error("Die zugehörige Lektion wurde nicht gefunden.");
+    await apiJson(`${API}/mastery/attempt`, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({lesson_id:lesson.id,passed}),
+    });
     await refreshProfile?.();
   }
 
   async function check() {
-    let passed = false;
-    let detail = null;
+    if (busy) return;
+    setBusy("check");
+    setError("");
+    try {
+      let passed = false;
+      let detail = null;
 
-    if (exercise.type === "predict" || exercise.type === "debug") passed = selected === exercise.correct;
-    if (exercise.type === "fill") passed = exercise.answers.some(x => normalizeExplanation(x) === normalizeExplanation(answer));
-    if (exercise.type === "explain") {
-      detail = evaluateExplanation(exercise, answer);
-      passed = detail.passed;
+      if (exercise.type === "predict" || exercise.type === "debug") passed = selected === exercise.correct;
+      if (exercise.type === "fill") passed = exercise.answers.some(x => normalizeExplanation(x) === normalizeExplanation(answer));
+      if (exercise.type === "explain") {
+        detail = evaluateExplanation(exercise, answer);
+        passed = detail.passed;
+      }
+
+      if (exercise.type === "challenge") {
+        const data = await apiJson(`${API}/check`, {
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({
+            code,
+            expected_output:exercise.expected_output,
+            lesson_id:lesson?.id,
+            step_id:stablePracticeId(exercise),
+            xp:25,
+          }),
+        });
+        setConsoleText(data.stderr || data.stdout || "(keine Ausgabe)");
+        setResult({passed:data.passed});
+        setSession(s=>({correct:s.correct+(data.passed?1:0),total:s.total+1}));
+        await refreshProfile?.();
+        return;
+      }
+
+      await record(passed);
+      setResult({passed,detail});
+      setSession(s=>({correct:s.correct+(passed?1:0),total:s.total+1}));
+    } catch (err) {
+      setError(err.message || "Die Aufgabe konnte nicht geprüft werden.");
+    } finally {
+      setBusy("");
     }
-
-    if (exercise.type === "challenge") {
-      const response = await fetch(`${API}/check`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code,expected_output:exercise.expected_output,lesson_id:lesson?.id || "practice",step_id:`practice-${exercise.lessonIndex}-${index}`,xp:25})});
-      const data = await response.json();
-      setConsoleText(data.stderr || data.stdout || "(keine Ausgabe)");
-      setResult({passed:data.passed});
-      setSession(s=>({correct:s.correct+(data.passed?1:0),total:s.total+1}));
-      await refreshProfile?.();
-      return;
-    }
-
-    setResult({passed,detail});
-    setSession(s=>({correct:s.correct+(passed?1:0),total:s.total+1}));
-    await record(passed);
   }
 
   async function runCode() {
-    const response = await fetch(`${API}/run`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});
-    const data = await response.json();
-    setConsoleText(data.stderr || data.stdout || "(keine Ausgabe)");
+    if (!code.trim() || busy) return;
+    setBusy("run");
+    setError("");
+    try {
+      const data = await apiJson(`${API}/run`, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({code}),
+      });
+      setConsoleText(data.stderr || data.stdout || "(keine Ausgabe)");
+    } catch (err) {
+      setError(err.message || "Der Code konnte nicht ausgeführt werden.");
+    } finally {
+      setBusy("");
+    }
   }
 
   function next() {
@@ -228,34 +307,44 @@ export default function ActivePractice({ lessons, refreshProfile }) {
       ? "Richtig – vollständig erklärt."
       : "Richtig – der Kern stimmt."
     : null;
+  const answerMissing = (exercise.type === "fill" || exercise.type === "explain") && !answer.trim();
+  const selectionMissing = (exercise.type === "predict" || exercise.type === "debug") && selected === null;
+  const codeMissing = exercise.type === "challenge" && !code.trim();
 
   return <section className="practice-page">
     <div className="path-heading"><span className="eyebrow">Aktives Training</span><h1>Python wirklich anwenden</h1><p>Wähle, wie du trainieren möchtest. Der Lerninhalt bleibt gleich, die Lernform ändert sich.</p></div>
 
-    <div className="learning-modes">{Object.entries(MODES).map(([key,item])=>{const Icon=item.icon;return <button key={key} className={mode===key?"active":""} onClick={()=>changeMode(key)}><Icon size={17}/><strong>{item.label}</strong><span>{item.description}</span></button>})}</div>
+    <div className="learning-modes">{Object.entries(MODES).map(([key,item])=>{const Icon=item.icon;return <button key={key} className={mode===key?"active":""} aria-pressed={mode===key} disabled={Boolean(busy)} onClick={()=>changeMode(key)}><Icon size={17}/><strong>{item.label}</strong><span>{item.description}</span></button>})}</div>
 
     <div className="practice-session"><span>Diese Runde</span><strong>{session.correct} richtig / {session.total} beantwortet</strong><small>{session.total ? `${Math.round(session.correct/session.total*100)}% Trefferquote` : "Noch keine Aufgabe bewertet"}</small></div>
 
     <div className="practice-types"><span><FileQuestion/> Vorhersagen</span><span><Bug/> Fehler finden</span><span><PencilLine/> Lückencode</span><span><Code2/> Erklären</span><span><Target/> Problemlösen</span></div>
+
+    {error && <div className="app-notice" role="status"><AlertCircle size={17}/><span>{error}</span><button onClick={()=>setError("")} aria-label="Fehlerhinweis schließen">×</button></div>}
 
     <div className="practice-card">
       <div className="practice-head"><div><span>{typeLabel(exercise.type)}</span><h2>{exercise.title}</h2></div><strong>{index + 1} / {pool.length}</strong></div>
       {exercise.code && <pre className="code-block"><code>{exercise.code}</code></pre>}
       <p className="question">{exercise.question}</p>
 
-      {(exercise.type === "predict" || exercise.type === "debug") && <div className="options">{exercise.options.map((o,i)=><button key={o} className={`option ${selected===i?"selected":""} ${result && i===exercise.correct?"correct":""} ${result && selected===i && i!==exercise.correct?"wrong":""}`} disabled={result!==null} onClick={()=>setSelected(i)}><span>{String.fromCharCode(65+i)}</span><code>{o}</code></button>)}</div>}
-      {(exercise.type === "fill" || exercise.type === "explain") && <textarea className="practice-answer" value={answer} disabled={result!==null} onChange={e=>setAnswer(e.target.value)} placeholder={exercise.type === "explain" ? "Erkläre den Ablauf in deinen eigenen Worten …" : "Deine Antwort …"}/>}
-      {exercise.type === "challenge" && <><div className="editor-shell"><div className="editor-toolbar"><span>practice.py</span><button onClick={runCode}><Play size={15}/> Ausführen</button></div><textarea className="editor" value={code} onChange={e=>setCode(e.target.value)} spellCheck={false}/></div><div className="console"><div className="console-title">Ausgabe</div><pre>{consoleText || "Deine Ausgabe erscheint hier."}</pre></div></>}
+      {(exercise.type === "predict" || exercise.type === "debug") && <div className="options">{exercise.options.map((o,i)=><button key={o} className={`option ${selected===i?"selected":""} ${result && i===exercise.correct?"correct":""} ${result && selected===i && i!==exercise.correct?"wrong":""}`} disabled={result!==null||Boolean(busy)} onClick={()=>setSelected(i)}><span>{String.fromCharCode(65+i)}</span><code>{o}</code></button>)}</div>}
+      {(exercise.type === "fill" || exercise.type === "explain") && <textarea className="practice-answer" value={answer} disabled={result!==null||Boolean(busy)} onChange={e=>setAnswer(e.target.value)} placeholder={exercise.type === "explain" ? "Erkläre den Ablauf in deinen eigenen Worten …" : "Deine Antwort …"}/>}
+      {exercise.type === "challenge" && <><div className="editor-shell"><div className="editor-toolbar"><span>practice.py</span><button disabled={!code.trim()||Boolean(busy)} onClick={runCode}><Play size={15}/> {busy==="run"?"Läuft …":"Ausführen"}</button></div><textarea className="editor" value={code} disabled={busy==="check"} onChange={e=>{setCode(e.target.value);setResult(null)}} onKeyDown={e=>insertIndent(e,code,setCode)} spellCheck={false}/></div><div className="console"><div className="console-title">Ausgabe</div><pre>{consoleText || "Deine Ausgabe erscheint hier."}</pre></div></>}
 
-      {visualCode && !visualCode.includes("____") && <div className="practice-viz-toggle"><button className="ghost" onClick={()=>setShowVisualizer(v=>!v)}><Eye size={16}/> {showVisualizer?"Visualizer schließen":"Code Schritt für Schritt"}</button></div>}
-      {showVisualizer && visualCode && !visualCode.includes("____") && <BasicVisualizer code={visualCode}/>} 
+      {visualCode && !visualCode.includes("____") && <div className="practice-viz-toggle"><button className="ghost" disabled={Boolean(busy)} onClick={()=>setShowVisualizer(v=>!v)}><Eye size={16}/> {showVisualizer?"Visualizer schließen":"Code Schritt für Schritt"}</button></div>}
+      {showVisualizer && visualCode && !visualCode.includes("____") && <BasicVisualizer code={visualCode}/>}
 
       {result && <div className={`feedback ${result.passed?"success":"error"}`}>
         <strong>{result.passed ? (explainFeedback || "Richtig – das sitzt.") : "Noch nicht sicher."}</strong>
         <p>{exercise.explanation}</p>
         {exercise.type === "explain" && result.passed && result.detail?.missing?.length > 0 && <p><strong>Noch genauer könntest du erwähnen:</strong> {result.detail.missing.join(", ")}.</p>}
       </div>}
-      <div className="practice-actions">{!result ? <button className="primary" onClick={check} disabled={(exercise.type==="predict"||exercise.type==="debug")&&selected===null}><CheckCircle2 size={17}/> Prüfen</button> : <button className="primary" onClick={next}>{index===pool.length-1?<RefreshCcw size={17}/>:<ChevronRight size={17}/>} {index===pool.length-1?"Neue Runde":"Nächste Aufgabe"}</button>}</div>
+
+      <div className="practice-actions">
+        {!result ? <button className="primary" onClick={check} disabled={Boolean(busy)||selectionMissing||answerMissing||codeMissing}><CheckCircle2 size={17}/> {busy==="check"?"Prüfe …":"Prüfen"}</button>
+        : !result.passed ? <><button className="ghost" onClick={retry}>Nochmal versuchen</button><button className="primary" onClick={next}><ChevronRight size={17}/> Nächste Aufgabe</button></>
+        : <button className="primary" onClick={next}>{index===pool.length-1?<RefreshCcw size={17}/>:<ChevronRight size={17}/>} {index===pool.length-1?"Neue Runde":"Nächste Aufgabe"}</button>}
+      </div>
     </div>
   </section>;
 }
